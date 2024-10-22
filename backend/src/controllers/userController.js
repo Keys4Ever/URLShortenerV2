@@ -1,0 +1,7 @@
+/*
+Create new user
+Remove user
+Change username
+Get user info
+Get all users info
+*/

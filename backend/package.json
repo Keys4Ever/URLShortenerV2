@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@libsql/client": "^0.14.0",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "firebase": "^11.0.0"
+    "express": "^4.21.1"
   }
 }
