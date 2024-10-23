@@ -6,7 +6,7 @@ import {
 
 const router = express.Router();
 
-router.put('/clicks/:shortUrl', updateClicksController);
-router.get('/clicks/:id/:day', getOneDayClicksController);
+router.put('/:shortUrl', updateClicksController);
+router.get('/:id/:day', getOneDayClicksController);
 
 export default router;
