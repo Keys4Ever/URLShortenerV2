@@ -72,10 +72,10 @@ const updateUser = async (username, id, picture) => {
     query += updates.join(", ");
     query += " WHERE user_id = ?";
     args.push(id);
-
+    const transaction = await client.transaction("write");
     try {
         // Ejecutar la consulta con los argumentos dinámicos
-        const response = await client.execute({
+        const response = await transaction.execute({
             sql: query,
             args: args,
         });
@@ -84,13 +84,17 @@ const updateUser = async (username, id, picture) => {
             throw new Error('User not found or no changes made');
         }
 
+        await transaction.commit();
         return response;
     } catch (error) {
+        await transaction.rollback();
         throw error;
     }
 };
 
 const createUser = async (userId, email) =>{
+
+    const transaction = await client.transaction("write");
     try {
         if(!userId){
             throw new Error("User ID Not found");
@@ -99,7 +103,7 @@ const createUser = async (userId, email) =>{
             throw new Error("Email not found");
         }
         
-        const response = await client.execute({
+        const response = await transaction.execute({
             sql: "INSERT INTO users (userId, email) VALUES (?,?)",
             args: [userId, email]
         });
@@ -107,8 +111,11 @@ const createUser = async (userId, email) =>{
         if (response.affectedRows === 0){
             throw new Error("Error desconocido al crear el usuario");
         }
+
+        await transaction.commit();
         return response;
     } catch (error) {
+        await transaction.rollback();
         throw error;
     }
 }

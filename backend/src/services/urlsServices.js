@@ -1,36 +1,51 @@
 import client from "../utils/turso"
+import {addUrlToUrlStats} from './urlStatServices.js'
 import { nanoid } from 'nanoid'
 
+const createShortUrl = async (userId, longUrl) => {
+    let shortUrl = nanoid(6);
 
+    while (alreadyExists(shortUrl)) {
+        shortUrl = nanoid(6);
+    }
 
-const createShortUrl = async(userId, longUrl) =>{
-    const shortUrl = nanoid(6);
     const result = {
         url: shortUrl,
         success: false
+    };
+
+    if (!userId) {
+        return { error: "User ID es necesario" };
     }
-    
+    if (!longUrl) {
+        return { error: "No puedo acortar la URL si no me das una URL para acortar :v" };
+    }
+
+    const transaction = await client.transaction("write");
+
     try {
-        if(!userId){
-            throw new Error("User id es necesario");
-        }
-        if(!longUrl){
-            throw new Error("No puedo acortar la url si no me das una url para acortar :v");
-        }
-        const response = await client.execute({
-            sql: "INSERT INTO urls (user_id, short_url, original_url) VALUES (?,?,?)",
+        const response = await transaction.execute({
+            sql: "INSERT INTO urls (user_id, short_url, original_url) VALUES (?, ?, ?) RETURNING id",
             args: [userId, shortUrl, longUrl]
         });
 
-        if(response.rowsAffected == 0){
-            throw new Error("Error durante la inserción...")
-        } 
+        try {
+            addUrlToUrlStats(response.id);
+        } catch (error) {
+            throw new Error("Error al agregar la URL a las estadísticas: " + error.message);
+        }
+
+        await transaction.commit();
         result.success = true;
+
         return result;
+
     } catch (error) {
+        await transaction.rollback();
+        console.error("Error creando short URL:", error);
         throw error;
     }
-}
+};
 
 const getOriginalUrl = async(shortUrl) =>{
     try {
@@ -73,50 +88,53 @@ const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUr
     let args = [];
     let updates = [];
 
+    // Validación: Si los valores actuales y los nuevos son iguales, no hay nada que actualizar
+    if (currentLongUrl === newLongUrl && currentShortUrl === newShortUrl) {
+        return { error: "No changes detected" };
+    }
+
+    // Construir dinámicamente la parte de la query de actualización
+    if (newShortUrl && currentShortUrl) {
+        updates.push("short_url = ?");
+        args.push(newShortUrl);
+    }
+
+    if (newLongUrl && currentLongUrl) {
+        updates.push("original_url = ?");
+        args.push(newLongUrl);
+    }
+
+    // Si no hay cambios a aplicar, lanzamos un error
+    if (updates.length === 0) {
+        return { error: "No fields to update" };
+    }
+
+    // Concatenar las actualizaciones dinámicas y añadir la condición WHERE
+    query += updates.join(", ");
+    query += " WHERE ";
+
+    // Condiciones dinámicas en el WHERE
+    let conditions = [];
+
+    if (currentShortUrl) {
+        conditions.push("short_url = ?");
+        args.push(currentShortUrl);
+    }
+
+    if (currentLongUrl) {
+        conditions.push("original_url = ?");
+        args.push(currentLongUrl);
+    }
+
+    // Concatenar las condiciones del WHERE (puede ser una o ambas)
+    query += conditions.join(" AND ");
+
+    // Iniciar la transacción
+    const transaction = await client.transaction("write");
+
     try {
-        // Validación: Si los valores actuales y los nuevos son iguales, no hay nada que actualizar
-        if (currentLongUrl === newLongUrl && currentShortUrl === newShortUrl) {
-            throw new Error("No changes detected");
-        }
-
-        // Construir dinámicamente la parte de la query de actualización
-        if (newShortUrl && currentShortUrl) {
-            updates.push("short_url = ?");
-            args.push(newShortUrl);
-        }
-
-        if (newLongUrl && currentLongUrl) {
-            updates.push("original_url = ?");
-            args.push(newLongUrl);
-        }
-
-        // Si no hay cambios a aplicar, lanzamos un error
-        if (updates.length === 0) {
-            throw new Error("No fields to update");
-        }
-
-        // Concatenar las actualizaciones dinámicas y añadir la condición WHERE
-        query += updates.join(", ");
-        query += " WHERE ";
-        
-        // Condiciones dinámicas en el WHERE
-        let conditions = [];
-
-        if (currentShortUrl) {
-            conditions.push("short_url = ?");
-            args.push(currentShortUrl);
-        }
-
-        if (currentLongUrl) {
-            conditions.push("original_url = ?");
-            args.push(currentLongUrl);
-        }
-
-        // Concatenar las condiciones del WHERE (puede ser una o ambas)
-        query += conditions.join(" AND ");
-
         // Ejecutar la consulta con los argumentos generados
-        const response = await client.execute({
+        const response = await transaction.execute({
             sql: query,
             args: args,
         });
@@ -126,8 +144,14 @@ const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUr
             throw new Error("No matching URL found or no changes made");
         }
 
+        // Confirmar la transacción
+        await transaction.commit();
+
         return response;
+
     } catch (error) {
+        // Revertir la transacción en caso de error
+        await transaction.rollback();
         throw error;
     }
 };
@@ -168,4 +192,25 @@ const getAllFromUrl = async (shortUrl) => {
     }
 }
 
-export default {createShortUrl, getOriginalUrl, deleteUrl, updateUrl, getUserUrls, getAllFromUrl}
+async function alreadyExists(shortUrl){
+    try {
+        if(!shortUrl){
+            throw new Error("Falta la URL");
+        }
+
+        const { rows } = client.execute({
+            sql: "SELECT * FROM urls WHERE short_url = ?",
+            args: [shortUrl]
+        })
+        
+        if(rows.length == 0){
+            return false;
+        }else{
+            return true;
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export default {createShortUrl, getOriginalUrl, deleteUrl, updateUrl, getUserUrls, getAllFromUrl, alreadyExists}
