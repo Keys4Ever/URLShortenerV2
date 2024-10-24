@@ -1,5 +1,5 @@
 import client from "../utils/turso.js"
-const updateClicks = async (shortUrl) => {
+export const updateClicks = async (shortUrl) => {
     try {
         const id = await getIdFromUrl(shortUrl);
 
@@ -18,7 +18,7 @@ const updateClicks = async (shortUrl) => {
     }
 };
 
-const getOneDayClics = async (id, day) => {
+export const getOneDayClics = async (id, day) => {
     try {
         // Validar y convertir el string de fecha "día/mes/año" a un objeto Date
         const [dayPart, monthPart, yearPart] = day.split('/');
@@ -47,7 +47,7 @@ const getOneDayClics = async (id, day) => {
 };
 
 
-const addUrlToUrlStats = async (id) => {
+export const addUrlToUrlStats = async (id) => {
     const transaction = await client.transaction("write");
     try {
         if (!id) {
@@ -70,7 +70,7 @@ const addUrlToUrlStats = async (id) => {
     }
 };
 
-const getIdFromUrl = async (shortUrl) => {
+export const getIdFromUrl = async (shortUrl) => {
     try {
         if (!shortUrl) {
             throw new Error("Necesita URL");
@@ -91,6 +91,3 @@ const getIdFromUrl = async (shortUrl) => {
         throw error;
     }
 };
-
-
-export default {addUrlToUrlStats, getIdFromUrl, updateClicks, getOneDayClics};

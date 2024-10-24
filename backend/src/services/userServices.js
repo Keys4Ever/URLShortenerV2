@@ -1,6 +1,6 @@
-import client from "../utils/turso"
+import client from "../utils/turso.js"
 
-const getUserInfo = async (id) => {
+export const getUserInfo = async (id) => {
     try {
         const { rows } = await client.execute({
             sql: "SELECT * FROM users WHERE provider_id = ?",
@@ -17,7 +17,7 @@ const getUserInfo = async (id) => {
     }
 };
 
-const getAllUsers = async () => {
+export const getAllUsers = async () => {
     try {
         const { rows } = await client.execute("SELECT * FROM users");
         if (rows.length != 0) {
@@ -29,24 +29,8 @@ const getAllUsers = async () => {
         throw error;
     }
 };
-const deleteUser = async (id) => {
-    try {
-        const response = await client.execute({
-            sql: "DELETE FROM users WHERE user_id = ?",
-            args: [id],
-        });
 
-        if (response.affectedRows === 0) {
-            throw new Error('User not found or already deleted');
-        }
-
-        return response;
-    } catch (e) {
-        throw e; 
-    }
-};
-
-const updateUser = async (username, id, picture) => {
+export const updateUser = async (username, id, picture) => {
     if (!id) {
         throw new Error('User ID is required to update the user');
     }
@@ -91,33 +75,3 @@ const updateUser = async (username, id, picture) => {
         throw error;
     }
 };
-
-const createUser = async (userId, email) =>{
-
-    const transaction = await client.transaction("write");
-    try {
-        if(!userId){
-            throw new Error("User ID Not found");
-        }
-        if(!email){
-            throw new Error("Email not found");
-        }
-        
-        const response = await transaction.execute({
-            sql: "INSERT INTO users (userId, email) VALUES (?,?)",
-            args: [userId, email]
-        });
-        
-        if (response.affectedRows === 0){
-            throw new Error("Error desconocido al crear el usuario");
-        }
-
-        await transaction.commit();
-        return response;
-    } catch (error) {
-        await transaction.rollback();
-        throw error;
-    }
-}
-
-export default {getUserInfo, getAllUsers, updateUser, deleteUser, createUser};

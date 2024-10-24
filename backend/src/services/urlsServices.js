@@ -1,8 +1,8 @@
-import client from "../utils/turso"
+import client from "../utils/turso.js"
 import {addUrlToUrlStats} from './urlStatServices.js'
 import { nanoid } from 'nanoid'
 
-const createShortUrl = async (userId, longUrl) => {
+export const createShortUrl = async (userId, longUrl) => {
     let shortUrl = nanoid(6);
 
     while (alreadyExists(shortUrl)) {
@@ -47,7 +47,7 @@ const createShortUrl = async (userId, longUrl) => {
     }
 };
 
-const getOriginalUrl = async(shortUrl) =>{
+export const getOriginalUrl = async(shortUrl) =>{
     try {
         if(!shortUrl){
             throw new Error("No url");
@@ -65,7 +65,7 @@ const getOriginalUrl = async(shortUrl) =>{
     }
 }
 
-const deleteUrl = async(shortUrl) =>{
+export const deleteUrl = async(shortUrl) =>{
     try {
         if(!shortUrl){
             throw new Error("No url");
@@ -83,7 +83,7 @@ const deleteUrl = async(shortUrl) =>{
     }
 }
 
-const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUrl) => {
+export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUrl) => {
     let query = "UPDATE urls SET ";
     let args = [];
     let updates = [];
@@ -156,7 +156,7 @@ const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUr
     }
 };
 
-const getUserUrls = async (userId) => {
+export const getUserUrls = async (userId) => {
     try {
         if (!userId){
             throw new Error("Falta el user id");
@@ -174,7 +174,7 @@ const getUserUrls = async (userId) => {
     }
 }
 
-const getAllFromUrl = async (shortUrl) => {
+export const getAllFromUrl = async (shortUrl) => {
     try {
         if(!shortUrl){
             throw new Error("Falta la URL");
@@ -192,7 +192,7 @@ const getAllFromUrl = async (shortUrl) => {
     }
 }
 
-async function alreadyExists(shortUrl){
+export async function alreadyExists(shortUrl){
     try {
         if(!shortUrl){
             throw new Error("Falta la URL");
@@ -212,5 +212,3 @@ async function alreadyExists(shortUrl){
         throw error;
     }
 }
-
-export default {createShortUrl, getOriginalUrl, deleteUrl, updateUrl, getUserUrls, getAllFromUrl, alreadyExists}

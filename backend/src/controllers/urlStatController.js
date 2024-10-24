@@ -1,4 +1,4 @@
-import { updateClicks, getOneDayClics, addUrlToUrlStats } from '../services/urlStatServices.js';
+import { addUrlToUrlStats, updateClicks, getOneDayClics } from '../services/urlStatServices.js';
 
 // Controller para actualizar los clics de una short URL
 const updateClicksController = async (req, res) => {

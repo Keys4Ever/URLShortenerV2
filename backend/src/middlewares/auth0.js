@@ -1,6 +1,6 @@
 import { auth } from "express-openid-connect";
 import dotenv from "dotenv";
-import client from "../config/turso.js";
+import client from "../utils/turso.js";
 
 dotenv.config();
 
