@@ -1,13 +1,13 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Layout from '../Layout';
-import App from '../App';
+import MainPage from '../pages/MainPage';
 
 const AppRoutes = () => {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Routes>
-                <Route path="/" element={<Layout><App /></Layout>} />
+                <Route path="/" element={<Layout><MainPage/></Layout>} />
             </Routes>
         </Suspense>
     );
