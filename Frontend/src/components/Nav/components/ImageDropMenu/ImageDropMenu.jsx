@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { User } from 'lucide-react';
 import { useAuth } from '../../../../context/authContext.jsx'; // Importa el contexto de autenticación
 import OptionList from './options/OptionList.jsx';
 
@@ -14,28 +15,27 @@ const ImageDropMenu = () => {
         <div className="relative">
             <button
                 type="button"
-                className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                className="flex items-center justify-center w-10 h-10 bg-black text-white border-2 border-white rounded-full hover:bg-white hover:text-black focus:outline-none transition-colors duration-200"
                 id="user-menu-button"
                 aria-expanded={isOpen}
                 onClick={toggleDropdown}
             >
                 <span className="sr-only">Open user menu</span>
-                <img
-                    className="w-8 h-8 rounded-full"
-                    src="/docs/images/people/profile-picture-3.jpg"
-                    alt="user photo"
-                />
+                <User className="w-5 h-5" />
             </button>
-            <div
-                className={`absolute right-0 mt-2 z-50 ${isOpen ? '' : 'hidden'} w-48 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600`}
-                id="user-dropdown"
-            >
-                <div className="px-4 py-3">
-                    <span className="block text-sm text-gray-900 dark:text-white">{auth.user?.name || 'Usuario'}</span>
-                    <span className="block text-sm text-gray-500 truncate dark:text-gray-400">{auth.user?.email || 'Email no disponible'}</span>
+            
+            {isOpen && (
+                <div
+                    className="absolute right-0 mt-2 w-48 bg-black text-white border-2 border-white shadow-lg font-mono"
+                    id="user-dropdown"
+                >
+                    <div className="px-4 py-3 border-b-2 border-white text-center">
+                        <span className="block text-sm font-bold">{auth.user?.email || 'Usuario'}</span>
+                        <span className="block text-xs text-gray-400">Free Plan</span>
+                    </div>
+                    <OptionList />
                 </div>
-                <OptionList />
-            </div>
+            )}
         </div>
     );
 };
