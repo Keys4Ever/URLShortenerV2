@@ -12,7 +12,7 @@ const ImageDropMenu = () => {
     };
 
     return (
-        <div className="relative">
+        <div className="relative z-50">
             <button
                 type="button"
                 className="flex items-center justify-center w-10 h-10 bg-black text-white border-2 border-white rounded-full hover:bg-white hover:text-black focus:outline-none transition-colors duration-200"
@@ -26,7 +26,7 @@ const ImageDropMenu = () => {
             
             {isOpen && (
                 <div
-                    className="absolute right-0 mt-2 w-48 bg-black text-white border-2 border-white shadow-lg font-mono"
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-black text-black dark:text-white border-2 border-black dark:border-white shadow-lg font-mono"
                     id="user-dropdown"
                 >
                     <div className="px-4 py-3 border-b-2 border-white text-center">
