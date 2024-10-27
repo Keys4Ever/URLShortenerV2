@@ -17,7 +17,7 @@ const Nav = () => {
                     
                     <ABtn link="https://keys4ever.dev" label="Creator Info" className="text-xs sm:text-sm md:text-base lg:text-lg" />
 
-                    {auth.authenticated ? <LoginButton /> : <ImageDropMenu /> }
+                    {auth.authenticated ? <ImageDropMenu /> : <LoginButton /> }
                 </div>
             </div>
         </nav>
