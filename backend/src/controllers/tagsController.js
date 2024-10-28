@@ -5,7 +5,7 @@ import {
     updateTag,
     deleteTag,
     addTagToUrl
-} from '../services/tagServices.js';
+} from '../services/tagsServices.js';
 
 // Create Tag Controller
 export const createTagController = async (req, res) => {

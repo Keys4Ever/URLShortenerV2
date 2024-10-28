@@ -6,7 +6,7 @@ import {
     updateTagController,
     deleteTagController,
     addTagToUrlController
-} from '../controllers/tagControllers.js';
+} from '../controllers/tagsController.js';
 
 const router = express.Router();
 

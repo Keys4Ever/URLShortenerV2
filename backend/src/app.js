@@ -44,7 +44,7 @@ app.get("/callback", (req, res) => {
 })
 
 app.use("/api/users", userRoutes);
-app.use('/api/tags')
+app.use('/api/tags',  tagsRoutes);
 app.use("/clicks", urlStatRoutes);
 app.use("/auth", authRoutes);
 app.use("/", urlRoutes);

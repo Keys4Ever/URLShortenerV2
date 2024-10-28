@@ -27,7 +27,7 @@ const loginController = (req, res) => {
     if (!req.oidc.isAuthenticated()) {
         res.oidc.login();
     } else {
-        res.redirect('/profile');
+        res.redirect('http://localhost:3000/');
     }
 };
 
