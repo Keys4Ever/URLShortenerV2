@@ -158,17 +158,55 @@ export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, ne
 
 export const getUserUrls = async (userId) => {
     try {
-        if (!userId){
+        if (!userId) {
             throw new Error("Falta el user id");
         }
+
         const { rows } = await client.execute({
-            sql: "SELECT * FROM urls WHERE user_id = ?",
+            sql: `
+                SELECT u.id AS url_id, u.short_url, u.original_url, 
+                       t.id AS tag_id, t.name AS tag_name, t.description AS tag_description
+                FROM urls u
+                LEFT JOIN url_tags ut ON u.id = ut.url_id
+                LEFT JOIN tags t ON ut.tag_id = t.id
+                WHERE u.user_id = ?
+                ORDER BY u.id
+            `,
             args: [userId]
-        })
-        if(rows.length == 0){
-            throw new Error("No tiene urls")
+        });
+
+        if (rows.length === 0) {
+            throw new Error("No tiene urls");
         }
-        return rows;
+
+        // Agrupar las etiquetas por URL
+        const urls = [];
+        let currentUrl = null;
+
+        rows.forEach(row => {
+            if (!currentUrl || currentUrl.url_id !== row.url_id) {
+                if (currentUrl) urls.push(currentUrl);
+
+                currentUrl = {
+                    id: row.url_id,
+                    short_url: row.short_url,
+                    original_url: row.original_url,
+                    tags: []
+                };
+            }
+
+            if (row.tag_id) {
+                currentUrl.tags.push({
+                    id: row.tag_id,
+                    name: row.tag_name,
+                    description: row.tag_description
+                });
+            }
+        });
+
+        if (currentUrl) urls.push(currentUrl);
+
+        return urls;
     } catch (error) {
         throw error;
     }
