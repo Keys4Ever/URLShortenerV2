@@ -11,6 +11,7 @@ import userRoutes from "./routes/userRoutes.js";
 import urlRoutes from './routes/urlRoutes.js';
 import urlStatRoutes from './routes/urlStatRoutes.js'
 import authRoutes from './routes/authRoutes.js'
+import tagsRoutes from './routes/tagsRoutes.js'
 
 const app = express();
 const port = 3000;
@@ -43,6 +44,7 @@ app.get("/callback", (req, res) => {
 })
 
 app.use("/api/users", userRoutes);
+app.use('/api/tags')
 app.use("/clicks", urlStatRoutes);
 app.use("/auth", authRoutes);
 app.use("/", urlRoutes);
