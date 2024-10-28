@@ -52,15 +52,21 @@ export const getOriginalUrl = async(shortUrl) =>{
         if(!shortUrl){
             throw new Error("No url");
         }
-        const { rows } = await client.execute({
+        const query = {
             sql: "SELECT original_url FROM urls WHERE short_url = ?",
             args:[shortUrl]
-        });
-        if (rows.length == 0) {
+        };
+        const { rows } = await client.execute(query);
+
+        if (rows.length === 0) {
             throw new Error("notfound");
         }
-        return rows[0].original_url;
+
+        const originalUrl = rows[0].original_url;
+        console.log("URL encontrada:", originalUrl);
+        return originalUrl;
     } catch (error) {
+        console.error("Error completo:", error);
         throw error;
     }
 }

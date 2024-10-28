@@ -10,11 +10,11 @@ import {
 
 const router = express.Router();
 
-router.post('/url', createShortUrlController);
+router.post('/', createShortUrlController);
 router.get('/:shortUrl', getOriginalUrlController);
-router.delete('/url/:shortUrl', deleteUrlController);
-router.put('/url', updateUrlController);
-router.get('/url/:userId', getUserUrlsController);
-router.get('/url/details/:shortUrl', getAllFromUrlController);
+router.delete('/:shortUrl', deleteUrlController);
+router.put('/', updateUrlController);
+router.get('/:userId', getUserUrlsController);
+router.get('/details/:shortUrl', getAllFromUrlController);
 
 export default router;

@@ -12,6 +12,8 @@ import urlRoutes from './routes/urlRoutes.js';
 import urlStatRoutes from './routes/urlStatRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import tagsRoutes from './routes/tagsRoutes.js'
+import { getOriginalUrl } from "./services/urlsServices.js";
+import { updateClicks } from "./services/urlStatServices.js";
 
 const app = express();
 const port = 3000;
@@ -43,11 +45,31 @@ app.get("/callback", (req, res) => {
     res.redirect('http://localhost:5173/');
 })
 
+app.get('/:shortUrl', async(req, res) => {
+    try {
+        const shortUrl = req.params.shortUrl;
+        
+        const originalUrl = await getOriginalUrl(shortUrl);
+        
+        if(originalUrl){
+            await updateClicks(shortUrl);
+        }
+
+        return res.redirect(originalUrl);
+    } catch (error) {
+        console.error("Error en endpoint:", error);
+        if (error.message === 'notfound') {
+            return res.status(404).json({ error: 'URL not found' });
+        }
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 app.use("/api/users", userRoutes);
 app.use('/api/tags',  tagsRoutes);
 app.use("/clicks", urlStatRoutes);
 app.use("/auth", authRoutes);
-app.use("/", urlRoutes);
+app.use("/api/url", urlRoutes);
 
 
 app.listen(port, () => {
