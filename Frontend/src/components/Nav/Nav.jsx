@@ -22,7 +22,7 @@ const Nav = () => {
                 <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8 md:order-2">
                     {url != 'http://localhost:5173' ? <ABtn label='Home'link='/' /> : <ABtn link="https://keys4ever.dev" label="Creator Info" className="text-xs sm:text-sm md:text-base lg:text-lg" />}
 
-                    {auth.authenticated ? <LoginButton /> : <ImageDropMenu /> }
+                    {auth.authenticated ? <ImageDropMenu /> : <LoginButton /> }
                 </div>
             </div>
         </nav>
