@@ -14,7 +14,7 @@ router.post('/', createShortUrlController);
 router.get('/:shortUrl', getOriginalUrlController);
 router.delete('/:shortUrl', deleteUrlController);
 router.put('/', updateUrlController);
-router.get('/:userId', getUserUrlsController);
+router.get('/user/:userId', getUserUrlsController);
 router.get('/details/:shortUrl', getAllFromUrlController);
 
 export default router;
