@@ -23,7 +23,7 @@ router.get('/', getAllTagsController);
 router.put('/:tagId', updateTagController);
 
 // Ruta para eliminar un tag específico por ID
-router.delete('/:tagId', deleteTagController);
+router.delete('/:userId/:tagId', deleteTagController);
 
 // Ruta para asociar un tag con una URL
 router.post('/url-tags', addTagToUrlController);

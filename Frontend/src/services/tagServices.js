@@ -77,10 +77,13 @@ export const updateTag = async (tagId, newName, newDescription) => {
 };
 
 // Eliminar un tag por ID
-export const deleteTag = async (tagId) => {
+export const deleteTag = async (userId, tagId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags/${tagId}`, {
-            method: 'DELETE'
+        const response = await fetch(`${API_BASE_URL}api/tags/${userId}/${tagId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
         });
 
         if (!response.ok) {
@@ -93,6 +96,7 @@ export const deleteTag = async (tagId) => {
         throw error;
     }
 };
+
 
 // Asociar un tag a una URL
 export const addTagToUrl = async (urlId, tagId) => {

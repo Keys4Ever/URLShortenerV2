@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import Tag from '../../components/Tag';
 
-const TagsSection = ({ tags, isLoading }) => {
+const TagsSection = ({ tags, isLoading, setTags, userId }) => {
     const [selectedTags, setSelectedTags] = useState([]);
+
     console.log(tags);
     const tagsError = tags.length ? false : true;
 
@@ -18,7 +19,7 @@ const TagsSection = ({ tags, isLoading }) => {
                     <p className='text-black dark:text-white'>No tags found</p>
                 ) : (
                     tags.map(tag => (
-                        <Tag selectedTags={selectedTags} setSelectedTags={setSelectedTags} tag={tag} key={tag.id} />
+                        <Tag setTags={setTags} selectedTags={selectedTags} setSelectedTags={setSelectedTags} tag={tag} userId={userId} key={tag.id} />
                     ))
                 )}
             </div>

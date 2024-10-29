@@ -52,7 +52,7 @@ export default function Dashboard() {
         <div className="min-h-screen bg-black text-white">
             <div className='mx-16'>
                 <main className='py-8'>
-                    <TagsSection tags={tags} isLoading={isLoadingTags} />
+                    <TagsSection tags={tags} setTags={setTags} isLoading={isLoadingTags} userId={userId} />
                 </main>
             </div>
         </div>

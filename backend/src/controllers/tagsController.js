@@ -61,16 +61,17 @@ export const updateTagController = async (req, res) => {
 
 // Delete Tag Controller
 export const deleteTagController = async (req, res) => {
-    const userId = req.user.id;
-    const { tagId } = req.params;
+    const { userId, tagId } = req.params;
 
     try {
-        await deleteTag(userId, tagId);
-        res.status(200).json({ success: true });
+        const result = await deleteTag(userId, tagId);
+        res.status(200).json(result);
     } catch (error) {
         res.status(404).json({ success: false, error: error.message });
     }
 };
+
+
 
 // Associate Tag with URL Controller
 export const addTagToUrlController = async (req, res) => {
