@@ -35,7 +35,7 @@ export const getTagController = async (req, res) => {
 
 // Get all Tags for a User Controller
 export const getAllTagsController = async (req, res) => {
-    const userId = req.user.id;
+    const {userId} = req.query;
 
     try {
         const tags = await getAllTags(userId);
