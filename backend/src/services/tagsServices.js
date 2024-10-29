@@ -41,17 +41,19 @@ export const getTag = async (userId, tagId) => {
 
 // Get all Tags for a User
 export const getAllTags = async (userId) => {
+    console.log("Received userId: ", userId);
     try {
         const { rows } = await client.execute({
             sql: "SELECT id, name, description FROM tags WHERE user_id = ?",
-            args: [userId]
+            args: [userId] // Convertimos userId a un número entero
         });
-        
+        console.log("Las rows xdxd: ", rows);
         return rows;
     } catch (error) {
         throw error;
     }
 };
+
 
 // Update Tag
 export const updateTag = async (userId, tagId, newName, newDescription) => {
