@@ -1,60 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/authContext';
-import { getUserUrls } from '../services/urlServices';
-import { getAllTags } from '../services/tagServices';
-import TagsSection from './Dashboard/TagsSection';
+import { useEffect } from "react"
 
-export default function Dashboard() {
-    const { auth, loading } = useAuth();
+const Dashboard = () =>{
 
-    const userId = auth.user ? auth.user.sub.split('|')[1] : null;
+    useEffect(()=>{
+        
+    },[])
 
-    useEffect(() => {
-        if (!loading && !auth.authenticated) {
-            window.location.href = "http://localhost:3000/auth/login";
-        }
-    }, [loading, auth.authenticated]);
+    return(
+        <>
+            <section>
+                {/**Tag section TODO */}
+            </section>
 
-    // Mover urlItems y tags fuera de dashboardState
-    const [urlItems, setUrlItems] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [isLoadingTags, setIsLoadingTags] = useState(true);
+            <section>
+                {/**Search and buttons sections TODO */}
+            </section>
 
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            if (!userId) return;
-
-            try {
-                setIsLoadingTags(true);
-                const urls = await getUserUrls(userId);
-
-                const fetchedTags = await getAllTags(userId);
-
-                console.log("fetched tags: ",fetchedTags);
-                setUrlItems(urls.length ? urls : []);
-                setTags(fetchedTags.tags.length ? fetchedTags.tags : []);
-                console.log("setted tags: ", tags);
-            } catch (error) {
-                console.error('Error al cargar datos iniciales:', error);
-            } finally {
-                setIsLoadingTags(false);
-            }
-        };
-
-        fetchInitialData();
-    }, [userId]);
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    return (
-        <div className="min-h-screen bg-black text-white">
-            <div className='mx-16'>
-                <main className='py-8'>
-                    <TagsSection tags={tags} isLoading={isLoadingTags} />
-                </main>
-            </div>
-        </div>
-    );
+            <section>
+                {/**Cards */}
+            </section>
+        </>
+    )
 }

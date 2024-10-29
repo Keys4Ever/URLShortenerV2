@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/';
+const API_BASE_URL = 'https://localhost:3000/';
 
 // Crear un nuevo tag
 export const createTag = async (name, description, userId) => {
@@ -41,7 +41,7 @@ export const getTag = async (tagId) => {
 // Obtener todos los tags de un usuario
 export const getAllTags = async (userId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags/?userId=${userId}`);
+        const response = await fetch(`${API_BASE_URL}api/tags?userId=${userId}`);
         
         if (!response.ok) {
             throw new Error('Error al obtener los tags');
