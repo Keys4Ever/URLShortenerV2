@@ -3,6 +3,7 @@ import { useAuth } from '../context/authContext';
 import { getUserUrls } from '../services/urlServices';
 import { getAllTags } from '../services/tagServices';
 import TagsSection from './Dashboard/TagsSection';
+import SearchAndActionBar from './Dashboard/SearchAndActionBar';
 
 export default function Dashboard() {
     const { auth, loading } = useAuth();
@@ -53,6 +54,7 @@ export default function Dashboard() {
             <div className='mx-16'>
                 <main className='py-8'>
                     <TagsSection tags={tags} setTags={setTags} isLoading={isLoadingTags} userId={userId} />
+                    <SearchAndActionBar /> 
                 </main>
             </div>
         </div>
