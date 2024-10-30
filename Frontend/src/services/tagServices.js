@@ -3,7 +3,7 @@ const API_BASE_URL = 'http://localhost:3000/';
 // Crear un nuevo tag
 export const createTag = async (name, description, userId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags`, {
+        const response = await fetch(`${API_BASE_URL}api/tags/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, description, userId })
