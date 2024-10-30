@@ -22,9 +22,9 @@ export const createTag = async (name, description, userId) => {
 };
 
 // Obtener un tag específico por ID
-export const getTag = async (tagId) => {
+export const getTag = async (userId, tagId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags/${tagId}`);
+        const response = await fetch(`${API_BASE_URL}api/tags/${userId}/${tagId}`);
         
         if (!response.ok) {
             throw new Error('Error al obtener el tag');
@@ -56,12 +56,12 @@ export const getAllTags = async (userId) => {
 };
 
 // Actualizar un tag por ID
-export const updateTag = async (tagId, newName, newDescription) => {
+export const updateTag = async (tagId, newName, newDescription, userId) => {
     try {
         const response = await fetch(`${API_BASE_URL}api/tags/${tagId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: newName, description: newDescription })
+            body: JSON.stringify({ name: newName, description: newDescription, userId: userId })
         });
 
         if (!response.ok) {
