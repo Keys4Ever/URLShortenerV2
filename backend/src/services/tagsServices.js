@@ -14,7 +14,7 @@ export const createTag = async(name, description, userId) => {
         }
 
         await transaction.commit();
-        return { success: true, tagId: result.lastInsertRowid };
+        return { success: true, tagId: Number(result.lastInsertRowid) };
     } catch (error) {
         await transaction.rollback();
         throw error;
