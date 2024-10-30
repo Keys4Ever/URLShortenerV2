@@ -57,6 +57,7 @@ export const getAllTags = async (userId) => {
 
 // Update Tag
 export const updateTag = async (userId, tagId, newName, newDescription) => {
+    String(userId);
     const transaction = await client.transaction('write');
     try {
         const result = await transaction.execute({

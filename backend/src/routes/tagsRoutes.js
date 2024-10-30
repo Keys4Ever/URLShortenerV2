@@ -14,7 +14,7 @@ const router = express.Router();
 router.post('/', createTagController);
 
 // Ruta para obtener un tag específico por ID
-router.get('/:tagId', getTagController);
+router.get('/:userId/:tagId', getTagController);
 
 // Ruta para obtener todos los tags de un usuario
 router.get('/', getAllTagsController);

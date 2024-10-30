@@ -51,9 +51,8 @@ export const getAllTagsController = async (req, res) => {
 
 // Update Tag Controller
 export const updateTagController = async (req, res) => {
-    const userId = req.user.id;
     const { tagId } = req.params;
-    const { name, description } = req.body;
+    const { name, description, userId } = req.body;
 
     try {
         await updateTag(userId, tagId, name, description);
