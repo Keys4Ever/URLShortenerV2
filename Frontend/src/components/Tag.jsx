@@ -1,7 +1,7 @@
 import { Edit, X } from "lucide-react";
 import { deleteTag } from "../services/tagServices";
 
-const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId }) => {
+const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId, handleEditTag }) => {
     const handleDelete = async (id, userId) => {
         try {
             await deleteTag(userId, id);
@@ -35,6 +35,7 @@ const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId }) => {
             </label>
             <div className="flex items-center gap-1">
                 <button
+                onClick={() => handleEditTag(tag.id)}
                     className="p-1 hover:bg-white hover:text-black transition"
                 >
                     <Edit className="w-4 h-4" />
