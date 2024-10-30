@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Tag from '../../components/Tag';
 import AddTagModal from './AddTagModal';
 
 const TagsSection = ({ tags, isLoading, setTags, userId }) => {
     const [selectedTags, setSelectedTags] = useState([]);
-    const [showAddForm, setShowAddForm] = useState(false)
-    console.log(tags);
-    const tagsError = tags.length ? false : true;
+    const [showAddForm, setShowAddForm] = useState(false);
+
+    const addTag = (newTag) => {
+        console.log(newTag);
+        setTags((prevTags) => [...prevTags, newTag]);
+    };
 
     if (isLoading) {
         return <p className='text-black dark:text-white'>Cargando tags...</p>;
@@ -15,9 +18,9 @@ const TagsSection = ({ tags, isLoading, setTags, userId }) => {
 
     return (
         <div className="border-2 border-white p-4 mb-6">
-        {showAddForm && <AddTagModal />}
+            {showAddForm && <AddTagModal userId={userId} setShowAddForm={setShowAddForm} addTag={addTag} />}
             <div className="flex flex-wrap gap-2 mb-4">
-                {tagsError ? (
+                {tags.length === 0 ? (
                     <p className='text-black dark:text-white'>No tags found</p>
                 ) : (
                     tags.map(tag => (
