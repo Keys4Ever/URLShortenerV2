@@ -9,21 +9,25 @@ import {
 
 // Create Tag Controller
 export const createTagController = async (req, res) => {
-    const { name, description } = req.body;
-    const userId = req.user.id;
+    const { userId, name, description } = req.body;
 
     try {
         const result = await createTag(name, description, userId);
+
+        if (!result || !result.tagId) {
+            throw new Error("No se pudo obtener el ID del tag después de crearlo.");
+        }
+
         res.status(201).json({ success: true, tagId: result.tagId });
     } catch (error) {
+        console.error("Error en createTagController:", error);
         res.status(500).json({ success: false, error: error.message });
     }
 };
 
 // Get a single Tag Controller
 export const getTagController = async (req, res) => {
-    const userId = req.user.id;
-    const { tagId } = req.params;
+    const { userId, tagId } = req.params;
 
     try {
         const tag = await getTag(userId, tagId);
