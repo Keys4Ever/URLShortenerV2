@@ -1,51 +1,79 @@
+import { addTagToUrl } from "./tagsServices.js";
 import client from "../utils/turso.js"
 import {addUrlToUrlStats} from './urlStatServices.js'
 import { nanoid } from 'nanoid'
 
-export const createShortUrl = async (userId, longUrl) => {
-    let shortUrl = nanoid(6);
+export const createShortUrl = async (userId, longUrl, shortUrl, tags, description) => {
+    console.log("Iniciando createShortUrl...");
+    
+    if (!userId) {
+        console.error("Error: User ID es necesario");
+        return { error: "User ID es necesario" };
+    }
+    if (!longUrl) {
+        console.error("Error: No puedo acortar la URL si no me das una URL para acortar");
+        return { error: "No puedo acortar la URL si no me das una URL para acortar :v" };
+    }
 
-    while (alreadyExists(shortUrl)) {
-        shortUrl = nanoid(6);
+    console.log("Generando shortUrl...");
+    if (!shortUrl) {
+        do {
+            shortUrl = nanoid(6);
+            console.log(`Generado shortUrl: ${shortUrl}`);
+        } while (await alreadyExists(shortUrl));
     }
 
     const result = {
         url: shortUrl,
-        success: false
+        success: false,
     };
-
-    if (!userId) {
-        return { error: "User ID es necesario" };
-    }
-    if (!longUrl) {
-        return { error: "No puedo acortar la URL si no me das una URL para acortar :v" };
-    }
-
+    console.log("Iniciando transacción...");
     const transaction = await client.transaction("write");
 
-    try {
-        const response = await transaction.execute({
-            sql: "INSERT INTO urls (user_id, short_url, original_url) VALUES (?, ?, ?) RETURNING id",
-            args: [userId, shortUrl, longUrl]
-        });
+    let query = "INSERT INTO urls (user_id, short_url, original_url";
+    const params = [userId, shortUrl, longUrl];
 
-        try {
-            addUrlToUrlStats(response.id);
-        } catch (error) {
-            throw new Error("Error al agregar la URL a las estadísticas: " + error.message);
+    if (description) {
+        query += ", description) VALUES (?, ?, ?, ?) RETURNING id";
+        params.push(description);
+        console.log("Descripción proporcionada, ajustando la consulta SQL.");
+    } else {
+        query += ") VALUES (?, ?, ?) RETURNING id";
+    }
+
+    console.log("Ejecutando consulta SQL:", query, "con parámetros:", params);
+
+    try {
+        const { rows } = await transaction.execute({
+            sql: query,
+            args: params,
+        });
+        console.log("Consulta ejecutada con éxito, filas devueltas:", rows);
+
+        // Ahora llamamos a addUrlToUrlStats dentro de la misma transacción
+        await addUrlToUrlStats(rows[0].id, transaction);
+        console.log("URL añadida a estadísticas con ID:", rows[0].id);
+
+        if (tags && tags.length > 0) {
+            console.log("Añadiendo etiquetas...");
+            await Promise.all(tags.map((tag) => addTagToUrl(rows[0].id, tag.id, transaction)));
+            console.log("Etiquetas añadidas exitosamente.");
         }
 
-        await transaction.commit();
         result.success = true;
-
+        await transaction.commit();
+        console.log("Transacción confirmada con éxito.");
         return result;
 
     } catch (error) {
-        await transaction.rollback();
         console.error("Error creando short URL:", error);
+        await transaction.rollback();
+        console.error("Transacción revertida debido a error.");
         throw error;
     }
 };
+
+
 
 export const getOriginalUrl = async(shortUrl) =>{
     try {
@@ -236,23 +264,30 @@ export const getAllFromUrl = async (shortUrl) => {
     }
 }
 
-export async function alreadyExists(shortUrl){
+export async function alreadyExists(shortUrl) {
+    console.log(`Verificando si ya existe la shortUrl: ${shortUrl}`);
+    
     try {
-        if(!shortUrl){
+        if (!shortUrl) {
             throw new Error("Falta la URL");
         }
 
-        const { rows } = client.execute({
+        const { rows } = await client.execute({
             sql: "SELECT * FROM urls WHERE short_url = ?",
             args: [shortUrl]
-        })
-        
-        if(rows.length == 0){
+        });
+
+        console.log("Consulta ejecutada, filas devueltas:", rows);
+
+        if (!rows || rows.length === 0) {
+            console.log("La shortUrl no existe.");
             return false;
-        }else{
+        } else {
+            console.log("La shortUrl ya existe.");
             return true;
         }
     } catch (error) {
-        throw error;
+        console.error("Error en alreadyExists:", error);
+        throw error;  // Re-lanza el error para que pueda ser manejado más arriba en la cadena de llamadas
     }
 }

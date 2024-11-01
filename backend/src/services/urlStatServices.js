@@ -33,12 +33,12 @@ export const getOneDayClics = async (id, day) => {
         const endOfDay = new Date(date.setHours(23, 59, 59, 999)).toISOString();
 
         const response = await client.execute({
-            sql: "SELECT COUNT(*) AS clicks FROM url_stats WHERE url_id = ? AND timestamp >= ? AND timestamp <= ?",
+            sql: "SELECT SUM(clicks) AS totalClicks FROM url_stats WHERE url_id = ? AND timestamp >= ? AND timestamp <= ?", // Cambia 'COUNT(*)' por 'SUM(clicks)'
             args: [id, startOfDay, endOfDay]
         });
-
+        
         // Retornar la cantidad de clics
-        return response.rows[0].clicks || 0; // Asegurarse de devolver 0 si no hay clics
+        return response.rows[0].totalclicks || 0; // Asegurarse de devolver 0 si no hay clics
 
     } catch (error) {
         console.error("Error obteniendo clics del día específico:", error);
@@ -46,29 +46,33 @@ export const getOneDayClics = async (id, day) => {
     }
 };
 
-
-export const addUrlToUrlStats = async (id) => {
-    const transaction = await client.transaction("write");
+export const addUrlToUrlStats = async (id, transaction) => {
+    console.log(`Iniciando addUrlToUrlStats con id: ${id}`);
+    
     try {
         if (!id) {
             throw new Error("Necesita URL");
         }
 
+        console.log("Ejecutando consulta para añadir estadísticas de URL...");
         const response = await transaction.execute({
-            sql: "INSERT INTO url_stats (url_id, count) VALUES (?,?)",
+            sql: "INSERT INTO url_stats (url_id, clicks) VALUES (?, ?)",
             args: [id, 0]
         });
 
-        if (response.rowsAffected == 0) {
+        console.log("Consulta ejecutada, filas afectadas:", response.rowsAffected);
+
+        if (response.rowsAffected === 0) {
             throw new Error("No se pudo añadir.");
         }
 
-        await transaction.commit();
+        console.log("Estadísticas de URL añadidas exitosamente.");
     } catch (error) {
-        await transaction.rollback();
+        console.error("Error en addUrlToUrlStats:", error);
         throw error;
     }
 };
+
 
 export const getIdFromUrl = async (shortUrl) => {
     try {

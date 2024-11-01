@@ -1,10 +1,11 @@
+import { addTagToUrl } from '../../../Frontend/src/services/tagServices.js';
 import { createShortUrl, getOriginalUrl, deleteUrl, updateUrl, getUserUrls, getAllFromUrl, alreadyExists } from '../services/urlsServices.js';
 
 // Controller para crear una short URL
 const createShortUrlController = async (req, res) => {
     try {
-        const { userId, longUrl } = req.body;
-        const result = await createShortUrl(userId, longUrl);
+        const { userId, longUrl, tags, description, shortUrl } = req.body;
+        const result = await createShortUrl(userId, longUrl, shortUrl, tags, description);
 
         if (result.error) {
             return res.status(400).json({ error: result.error });

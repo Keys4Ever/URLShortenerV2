@@ -3,11 +3,11 @@
 const API_BASE_URL = 'http://localhost:3000/';
 
 // Servicio para crear una URL corta
-export const createShortUrl = async (userId, longUrl) => {
-    const response = await fetch(`${API_BASE_URL}api/url`, {
+export const createShortUrl = async (userId, longUrl, shortUrl, tags, description) => {
+    const response = await fetch(`${API_BASE_URL}api/url/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, longUrl })
+        body: JSON.stringify({ userId, longUrl, shortUrl, tags, description })
     });
     return await response.json();
 };
