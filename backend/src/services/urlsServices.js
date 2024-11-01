@@ -4,18 +4,14 @@ import {addUrlToUrlStats} from './urlStatServices.js'
 import { nanoid } from 'nanoid'
 
 export const createShortUrl = async (userId, longUrl, shortUrl, tags, description) => {
-    console.log("Iniciando createShortUrl...");
     
     if (!userId) {
-        console.error("Error: User ID es necesario");
         return { error: "User ID es necesario" };
     }
     if (!longUrl) {
-        console.error("Error: No puedo acortar la URL si no me das una URL para acortar");
         return { error: "No puedo acortar la URL si no me das una URL para acortar :v" };
     }
 
-    console.log("Generando shortUrl...");
     if (!shortUrl) {
         do {
             shortUrl = nanoid(6);
@@ -36,39 +32,31 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
     if (description) {
         query += ", description) VALUES (?, ?, ?, ?) RETURNING id";
         params.push(description);
-        console.log("Descripción proporcionada, ajustando la consulta SQL.");
     } else {
         query += ") VALUES (?, ?, ?) RETURNING id";
     }
 
-    console.log("Ejecutando consulta SQL:", query, "con parámetros:", params);
 
     try {
         const { rows } = await transaction.execute({
             sql: query,
             args: params,
         });
-        console.log("Consulta ejecutada con éxito, filas devueltas:", rows);
 
         // Ahora llamamos a addUrlToUrlStats dentro de la misma transacción
         await addUrlToUrlStats(rows[0].id, transaction);
-        console.log("URL añadida a estadísticas con ID:", rows[0].id);
 
         if (tags && tags.length > 0) {
-            console.log("Añadiendo etiquetas...");
             await Promise.all(tags.map((tag) => addTagToUrl(rows[0].id, tag.id, transaction)));
-            console.log("Etiquetas añadidas exitosamente.");
         }
 
         result.success = true;
         await transaction.commit();
-        console.log("Transacción confirmada con éxito.");
         return result;
 
     } catch (error) {
         console.error("Error creando short URL:", error);
         await transaction.rollback();
-        console.error("Transacción revertida debido a error.");
         throw error;
     }
 };

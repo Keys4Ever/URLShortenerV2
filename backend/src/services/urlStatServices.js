@@ -47,28 +47,22 @@ export const getOneDayClics = async (id, day) => {
 };
 
 export const addUrlToUrlStats = async (id, transaction) => {
-    console.log(`Iniciando addUrlToUrlStats con id: ${id}`);
     
     try {
         if (!id) {
             throw new Error("Necesita URL");
         }
 
-        console.log("Ejecutando consulta para añadir estadísticas de URL...");
         const response = await transaction.execute({
             sql: "INSERT INTO url_stats (url_id, clicks) VALUES (?, ?)",
             args: [id, 0]
         });
 
-        console.log("Consulta ejecutada, filas afectadas:", response.rowsAffected);
-
         if (response.rowsAffected === 0) {
             throw new Error("No se pudo añadir.");
         }
 
-        console.log("Estadísticas de URL añadidas exitosamente.");
     } catch (error) {
-        console.error("Error en addUrlToUrlStats:", error);
         throw error;
     }
 };

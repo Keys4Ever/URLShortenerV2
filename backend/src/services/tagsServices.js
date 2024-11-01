@@ -99,25 +99,20 @@ export const deleteTag = async (userId, tagId) => {
 
 // addTagToUrl con transacción opcional
 export const addTagToUrl = async (urlId, tagId) => {
-    console.log(`Iniciando addTagToUrl con urlId: ${urlId} y tagId: ${tagId}`);
     
     try {
-        console.log("Ejecutando consulta para agregar etiqueta a la URL...");
         const result = await client.execute({
             sql: "INSERT INTO url_tags (url_id, tag_id) VALUES (?, ?)",
             args: [urlId, tagId],
         });
-        console.log("Consulta ejecutada, filas afectadas:", result.rowsAffected);
 
         if (result.rowsAffected === 0) {
             throw new Error("Failed to associate tag with URL");
         }
 
-        console.log("Etiqueta asociada exitosamente.");
         return { success: true };
 
     } catch (error) {
-        console.error("Error en addTagToUrl:", error);
         throw error;  // Re-lanza el error para que pueda ser manejado más arriba en la cadena de llamadas
     }
 };
