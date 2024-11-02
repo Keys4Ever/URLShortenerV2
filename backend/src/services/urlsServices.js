@@ -45,10 +45,18 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
 
         // Ahora llamamos a addUrlToUrlStats dentro de la misma transacción
         await addUrlToUrlStats(rows[0].id, transaction);
-
+        console.log("tags::: ",tags);
         if (tags && tags.length > 0) {
-            await Promise.all(tags.map((tag) => addTagToUrl(rows[0].id, tag.id, transaction)));
+
+            for (const tag of tags) {
+                try {
+                    await addTagToUrl(rows[0].id, tag.id, transaction);
+                } catch (error) {
+                    console.error(`Error al añadir tag ${tag} a la URL ${rows[0].id}:`, error);
+                }
+            }
         }
+        
 
         result.success = true;
         await transaction.commit();

@@ -78,8 +78,8 @@ export const deleteTagController = async (req, res) => {
 
 // Associate Tag with URL Controller
 export const addTagToUrlController = async (req, res) => {
+    console.log("Request body:", req.body); // Log entire request body
     const { urlId, tagId } = req.body;
-
     try {
         await addTagToUrl(urlId, tagId);
         res.status(201).json({ success: true });

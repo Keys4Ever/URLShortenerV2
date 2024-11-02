@@ -3,28 +3,30 @@ import { createShortUrl } from "../../services/urlServices";
 import { useState } from "react";
 
 const AddUrlModal = ({ tags, setShowUrlForm, userId }) => {
-    const [shortUrl, setShortUrl] = useState(null);
+    const [shortUrl, setShortUrl] = useState('');
     const [longUrl, setLongUrl] = useState('');
     const [description, setDescription] = useState('');
     const [selectedTags, setSelectedTags] = useState([]);
 
     const handleAddUrl = async () => {
         try {
+            console.log("Selected tags:", selectedTags); // Check selected tags
             await createShortUrl(userId, longUrl, shortUrl, selectedTags, description);
             setShowUrlForm(false);
         } catch (e) {
             console.error(e);
         }
     };
+    
 
-    const handleTagSelection = (tagId) => {
-        setSelectedTags((prevTags) =>
-            prevTags.includes(tagId)
-                ? prevTags.filter((id) => id !== tagId)
-                : [...prevTags, tagId]
-        );
+    const handleTagSelection = (tagId, tagName) => {
+        setSelectedTags((prevTags) => {
+            const exists = prevTags.some((tag) => tag.id === tagId);
+            return exists
+                ? prevTags.filter((tag) => tag.id !== tagId)
+                : [...prevTags, { id: tagId, name: tagName }];
+        });
     };
-
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[101]">
             <div className="bg-black border-2 border-white p-6 max-w-md w-full mx-4">
@@ -80,17 +82,18 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId }) => {
                     <div>
                         <label className="block mb-2">Tags</label>
                         <div className="flex flex-wrap gap-2 p-2 border-2 border-white">
-                            {tags.map((tag) => (
-                                <label key={tag.id} className="flex items-center gap-2 p-2 border border-white">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedTags.includes(tag.id)}
-                                        onChange={() => handleTagSelection(tag.id)}
-                                        title={tag.description}
-                                    />
-                                    {tag.name}
-                                </label>
-                            ))}
+                        {tags.map((tag) => (
+                            <label key={tag.id} className="flex items-center gap-2 p-2 border border-white">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedTags.some((selectedTag) => selectedTag.id === tag.id)}
+                                    onChange={() => handleTagSelection(tag.id, tag.name)}
+                                    title={tag.description}
+                                />
+                                {tag.name}
+                            </label>
+                        ))}
+
                         </div>
                     </div>
                     <div className="flex justify-end gap-4 pt-4">
