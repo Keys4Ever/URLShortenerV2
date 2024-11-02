@@ -192,15 +192,15 @@ export const getUserUrls = async (userId) => {
             throw new Error("Falta el user id");
         }
 
-        const { rows } = await client.execute({
+        const { rows } = await client.execute({ 
             sql: `
-                SELECT u.id AS url_id, u.short_url, u.original_url, 
-                       t.id AS tag_id, t.name AS tag_name, t.description AS tag_description
-                FROM urls u
-                LEFT JOIN url_tags ut ON u.id = ut.url_id
-                LEFT JOIN tags t ON ut.tag_id = t.id
-                WHERE u.user_id = ?
-                ORDER BY u.id
+               SELECT u.id AS url_id, u.short_url, u.original_url, u.description AS url_description,
+                    t.id AS tag_id, t.name AS tag_name, t.description AS tag_description
+               FROM urls u
+               LEFT JOIN url_tags ut ON u.id = ut.url_id
+               LEFT JOIN tags t ON ut.tag_id = t.id
+               WHERE u.user_id = ?
+               ORDER BY u.id
             `,
             args: [userId]
         });
@@ -214,13 +214,14 @@ export const getUserUrls = async (userId) => {
         let currentUrl = null;
 
         rows.forEach(row => {
-            if (!currentUrl || currentUrl.url_id !== row.url_id) {
+            if (!currentUrl || currentUrl.id !== row.url_id) {
                 if (currentUrl) urls.push(currentUrl);
 
                 currentUrl = {
                     id: row.url_id,
                     short_url: row.short_url,
                     original_url: row.original_url,
+                    description: row.url_description, // Añadir la descripción aquí
                     tags: []
                 };
             }
@@ -240,7 +241,8 @@ export const getUserUrls = async (userId) => {
     } catch (error) {
         throw error;
     }
-}
+};
+
 
 export const getAllFromUrl = async (shortUrl) => {
     try {
