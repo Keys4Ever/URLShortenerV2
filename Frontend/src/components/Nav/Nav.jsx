@@ -17,7 +17,7 @@ const Nav = () => {
 
     return (
         <nav className="bg-white dark:bg-black border-b-2 border-black dark:border-white">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <div className="flex flex-wrap items-center justify-between max-w-[932px] mx-auto p-4">
                 <LogoCliqueable />
                 <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8 md:order-2">
                     {url != 'http://localhost:5173' ? <ABtn label='Home'link='/' /> : <ABtn link="https://keys4ever.dev" label="Creator Info" className="text-xs sm:text-sm md:text-base lg:text-lg" />}

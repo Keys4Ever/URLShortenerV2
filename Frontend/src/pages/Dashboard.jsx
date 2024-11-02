@@ -4,7 +4,7 @@ import { getUserUrls } from '../services/urlServices';
 import { getAllTags } from '../services/tagServices';
 import TagsSection from './Dashboard/TagsSection';
 import SearchAndActionBar from './Dashboard/SearchAndActionBar';
-
+import UrlCard from '../components/UrlCard';
 export default function Dashboard() {
     const { auth, loading } = useAuth();
 
@@ -20,7 +20,26 @@ export default function Dashboard() {
     const [urlItems, setUrlItems] = useState([]);
     const [tags, setTags] = useState([]);
     const [isLoadingTags, setIsLoadingTags] = useState(true);
-
+    const exampleItem = [{
+        id: 1,
+        shortUrl: "bit.ly/ejemplo",
+        longUrl: "https://www.ejemplo.com/una-url-muy-larga-de-ejemplo",
+        description: "Descripción breve de la URL de ejemplo",
+        clicks: 120,
+        date: "2024-11-02",
+        tags: ["tutorial", "ejemplo", "desarrollo"]
+      },
+      {
+        id: 2,
+        shortUrl: "bit.ly/ejemplo2",
+        longUrl: "https://unlinkdeyoutuberealmentelargo.com/",
+        description: "Descripción breve XadasDASDadaSDASdaSDASdAS",
+        clicks: 120,
+        date: "2024-11-02",
+        tags: ["tutorial", "ejemplo", "desarrollo"]
+      }
+    ]
+      
     useEffect(() => {
         const fetchInitialData = async () => {
             if (!userId) return;
@@ -49,10 +68,15 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen bg-black text-white">
-            <div className='mx-16'>
+            <div className='max-w-[900px] mx-auto'>
                 <main className='py-8'>
                     <TagsSection tags={tags} setTags={setTags} isLoading={isLoadingTags} userId={userId} />
                     <SearchAndActionBar tags={tags} userId={userId} />
+                    <div className="space-y-2">
+                      {exampleItem.map((item) => (
+                            <UrlCard key={item.id} item={item} />
+                        ))}
+                    </div>
                 </main>
             </div>
         </div>

@@ -6,7 +6,7 @@ const Layout = ({ children }) => {
         <>
         <AuthProvider>
             <Nav />
-            <main>{children}</main>
+            <main className='bg-white dark:bg-black text-black dark:text-white'>{children}</main>
         </AuthProvider>
         </>
     );

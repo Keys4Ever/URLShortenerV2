@@ -4,7 +4,7 @@ import HeroSection from "../components/MainPageComponents/HeroSection";
 
 const MainPage = () =>{
     return (
-        <div className="bg-white dark:bg-black text-black dark:text-white">
+        <div className="max-w-[900px] mx-auto">
             <HeroSection />
             <LookURLSection />
         </div>
