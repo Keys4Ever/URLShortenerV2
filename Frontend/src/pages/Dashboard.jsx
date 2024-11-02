@@ -20,26 +20,7 @@ export default function Dashboard() {
     const [urlItems, setUrlItems] = useState([]);
     const [tags, setTags] = useState([]);
     const [isLoadingTags, setIsLoadingTags] = useState(true);
-    const exampleItem = [{
-        id: 1,
-        shortUrl: "bit.ly/ejemplo",
-        longUrl: "https://www.ejemplo.com/una-url-muy-larga-de-ejemplo",
-        description: "Descripción breve de la URL de ejemplo",
-        clicks: 120,
-        date: "2024-11-02",
-        tags: ["tutorial", "ejemplo", "desarrollo"]
-      },
-      {
-        id: 2,
-        shortUrl: "bit.ly/ejemplo2",
-        longUrl: "https://unlinkdeyoutuberealmentelargo.com/",
-        description: "Descripción breve XadasDASDadaSDASdaSDASdAS",
-        clicks: 120,
-        date: "2024-11-02",
-        tags: ["tutorial", "ejemplo", "desarrollo"]
-      }
-    ]
-      
+
     useEffect(() => {
         const fetchInitialData = async () => {
             if (!userId) return;
@@ -56,6 +37,7 @@ export default function Dashboard() {
                 console.error('Error al cargar datos iniciales:', error);
             } finally {
                 setIsLoadingTags(false);
+                console.log(urlItems);
             }
         };
 
@@ -73,7 +55,7 @@ export default function Dashboard() {
                     <TagsSection tags={tags} setTags={setTags} isLoading={isLoadingTags} userId={userId} />
                     <SearchAndActionBar tags={tags} userId={userId} />
                     <div className="space-y-2">
-                      {exampleItem.map((item) => (
+                      {urlItems.map((item) => (
                             <UrlCard key={item.id} item={item} />
                         ))}
                     </div>

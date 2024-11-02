@@ -6,7 +6,7 @@ function UrlCard({ item }) {
       <div className="flex justify-between items-start mb-2">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-bold">{item.shortUrl || "URL no disponible"}</span>
+            <span className="font-bold">https://keys.lat/{item.shortUrl || "URL no disponible"}</span>
             <button className="p-1 hover:bg-white hover:text-black transition rounded">
               <Copy className="w-4 h-4" />
             </button>
@@ -33,8 +33,8 @@ function UrlCard({ item }) {
       </div>
       <div className="flex gap-2">
         {(item.tags || []).map((tag, index) => (
-          <span key={index} className="px-2 py-1 text-sm border border-white">
-            {tag}
+          <span key={tag.id} className="px-2 py-1 text-sm border border-white">
+            {tag.name}
           </span>
         ))}
       </div>

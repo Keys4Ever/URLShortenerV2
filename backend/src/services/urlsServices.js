@@ -195,8 +195,11 @@ export const getUserUrls = async (userId) => {
         const { rows } = await client.execute({ 
             sql: `
                SELECT u.id AS url_id, u.short_url, u.original_url, u.description AS url_description,
-                    t.id AS tag_id, t.name AS tag_name, t.description AS tag_description
+                      COALESCE(us.clicks, 0) AS clicks, -- Añadir clicks con valor 0 por defecto si no hay registros
+                      us.access_date, -- Añadir access_date desde url_stats
+                      t.id AS tag_id, t.name AS tag_name, t.description AS tag_description
                FROM urls u
+               LEFT JOIN url_stats us ON u.id = us.url_id -- JOIN con la tabla url_stats
                LEFT JOIN url_tags ut ON u.id = ut.url_id
                LEFT JOIN tags t ON ut.tag_id = t.id
                WHERE u.user_id = ?
@@ -219,9 +222,11 @@ export const getUserUrls = async (userId) => {
 
                 currentUrl = {
                     id: row.url_id,
-                    short_url: row.short_url,
-                    original_url: row.original_url,
-                    description: row.url_description, // Añadir la descripción aquí
+                    shortUrl: row.short_url,
+                    longUrl: row.original_url,
+                    description: row.url_description,
+                    clicks: row.clicks, // Añadir el campo clicks aquí
+                    date: row.access_date, // Añadir el campo access_date aquí
                     tags: []
                 };
             }
@@ -242,6 +247,7 @@ export const getUserUrls = async (userId) => {
         throw error;
     }
 };
+
 
 
 export const getAllFromUrl = async (shortUrl) => {
