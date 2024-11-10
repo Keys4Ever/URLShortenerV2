@@ -50,7 +50,7 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
 
         // Ahora llamamos a addUrlToUrlStats dentro de la misma transacción
         await addUrlToUrlStats(rows[0].id, transaction);
-        console.log("tags::: ",tags);
+        console.log("tags: ",tags);
         if (tags && tags.length > 0) {
 
             for (const tag of tags) {
@@ -118,29 +118,34 @@ export const deleteUrl = async(shortUrl) =>{
     }
 }
 
-export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUrl) => {
+export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags = [], currentTags = []) => {
     let query = "UPDATE urls SET ";
     let args = [];
     let updates = [];
 
     // Validación: Si los valores actuales y los nuevos son iguales, no hay nada que actualizar
     if (currentLongUrl === newLongUrl && currentShortUrl === newShortUrl) {
-        return { error: "No changes detected" };
+        const addedTags = tags.filter(tag => !currentTags.includes(tag));
+        const removedTags = currentTags.filter(tag => !tags.includes(tag));
+
+        if (addedTags.length === 0 && removedTags.length === 0) {
+            return { error: "No changes detected" };
+        }
+    } else {
+        // Construir dinámicamente la parte de la query de actualización
+        if (newShortUrl && currentShortUrl) {
+            updates.push("short_url = ?");
+            args.push(newShortUrl);
+        }
+
+        if (newLongUrl && currentLongUrl) {
+            updates.push("original_url = ?");
+            args.push(newLongUrl);
+        }
     }
 
-    // Construir dinámicamente la parte de la query de actualización
-    if (newShortUrl && currentShortUrl) {
-        updates.push("short_url = ?");
-        args.push(newShortUrl);
-    }
-
-    if (newLongUrl && currentLongUrl) {
-        updates.push("original_url = ?");
-        args.push(newLongUrl);
-    }
-
-    // Si no hay cambios a aplicar, lanzamos un error
-    if (updates.length === 0) {
+    // Si no hay cambios en URLs ni etiquetas, lanzamos un error
+    if (updates.length === 0 && !tags && !currentTags) {
         return { error: "No fields to update" };
     }
 
@@ -161,28 +166,49 @@ export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, ne
         args.push(currentLongUrl);
     }
 
-    // Concatenar las condiciones del WHERE (puede ser una o ambas)
+    // Concatenar las condiciones del WHERE
     query += conditions.join(" AND ");
 
     // Iniciar la transacción
     const transaction = await client.transaction("write");
 
     try {
-        // Ejecutar la consulta con los argumentos generados
-        const response = await transaction.execute({
-            sql: query,
-            args: args,
-        });
+        // Ejecutar la consulta de actualización de URLs si hay cambios
+        let response = null;
+        if (updates.length > 0) {
+            response = await transaction.execute({
+                sql: query,
+                args: args,
+            });
 
-        // Verificar si no se afectaron filas (no se encontró la URL)
-        if (response.rowsAffected === 0) {
-            throw new Error("No matching URL found or no changes made");
+            // Verificar si no se afectaron filas (no se encontró la URL)
+            if (response.rowsAffected === 0) {
+                throw new Error("No matching URL found or no changes made");
+            }
+        }
+
+        // Actualizar las etiquetas
+        const addedTags = tags.filter(tag => !currentTags.includes(tag));
+        const removedTags = currentTags.filter(tag => !tags.includes(tag));
+
+        for (const tag of addedTags) {
+            await transaction.execute({
+                sql: "INSERT INTO url_tags (url_id, tag) VALUES ((SELECT id FROM urls WHERE short_url = ?), ?)",
+                args: [newShortUrl || currentShortUrl, tag],
+            });
+        }
+
+        for (const tag of removedTags) {
+            await transaction.execute({
+                sql: "DELETE FROM url_tags WHERE url_id = (SELECT id FROM urls WHERE short_url = ?) AND tag = ?",
+                args: [newShortUrl || currentShortUrl, tag],
+            });
         }
 
         // Confirmar la transacción
         await transaction.commit();
 
-        return response;
+        return response || { message: "Tags updated successfully" };
 
     } catch (error) {
         // Revertir la transacción en caso de error
@@ -190,6 +216,7 @@ export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, ne
         throw error;
     }
 };
+
 
 export const getUserUrls = async (userId) => {
     try {

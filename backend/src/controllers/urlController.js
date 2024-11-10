@@ -55,10 +55,11 @@ const deleteUrlController = async (req, res) => {
 // Controller para actualizar una URL
 const updateUrlController = async (req, res) => {
     try {
-        const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl } = req.body;
-        const result = await updateUrl(currentShortUrl, currentLongUrl, newShortUrl, newLongUrl);
+        const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags } = req.body;
+        const result = await updateUrl(currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags);
 
         if (result.error) {
+            console.log(result.error);
             return res.status(400).json({ error: result.error });
         }
 

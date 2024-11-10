@@ -29,7 +29,7 @@ export const deleteUrl = async (shortUrl) => {
 };
 
 // Servicio para actualizar una URL
-export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUrl) => {
+export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags) => {
     const response = await fetch(`${API_BASE_URL}api/url`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
