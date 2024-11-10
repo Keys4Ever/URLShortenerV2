@@ -5,7 +5,6 @@ import { getAllTags } from '../services/tagServices';
 import TagsSection from './Dashboard/TagsSection';
 import SearchAndActionBar from './Dashboard/SearchAndActionBar';
 import UrlCard from '../components/UrlCard';
-
 export default function Dashboard() {
   const { auth, loading } = useAuth();
   const userId = auth.user ? auth.user.sub.split('|')[1] : null;
@@ -15,13 +14,17 @@ export default function Dashboard() {
   const [isLoadingTags, setIsLoadingTags] = useState(true);
 
   // Función para actualizar URLs localmente
-  const updateUrlsLocally = (newUrl, isEditing = false) => {
-    setUrlItems(prevUrls => {
+  const updateUrlsLocally = async(newUrl, isEditing = false) => {
+    if(newUrl.shortUrl){
+      setUrlItems(prevUrls => {
       if (isEditing) {
         return prevUrls.map(url => url.id === newUrl.id ? newUrl : url);
       }
-      return [...prevUrls, newUrl];
-    });
+        return [...prevUrls, newUrl];
+      });
+    }else{
+      setUrlItems(await getUserUrls(userId));
+    }
   };
 
   // Función para eliminar URLs localmente
