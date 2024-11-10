@@ -30,6 +30,9 @@ const getOriginalUrlController = async (req, res) => {
         if (error.message === "notfound") {
             return res.status(404).json({ error: "Short URL not found" });
         }
+        if (error.message === "Invalid short URL"){
+            return res.status(400).json({ error: "Invalid short URL" });
+        }
         return res.status(500).json({ error: "Error retrieving original URL" });
     }
 };
