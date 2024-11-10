@@ -2,13 +2,13 @@ import { Plus, Search } from "lucide-react";
 import { useState } from "react";
 import AddUrlModal from "./AddUrlModal";
 
-const SearchAndActionBar = ({tags, userId}) => {
+const SearchAndActionBar = ({tags, userId, updateUrlsLocally}) => {
     const [searchBy, setSearchBy] = useState('short');
     const [showUrlForm, setShowUrlForm] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     return (
         <div className="flex justify-between items-center mb-6">
-        {showUrlForm && <AddUrlModal tags={tags} setShowUrlForm={setShowUrlForm} userId={userId} />}
+        {showUrlForm && <AddUrlModal tags={tags} setShowUrlForm={setShowUrlForm} userId={userId} updateUrlsLocally={updateUrlsLocally} />}
             <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input

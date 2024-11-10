@@ -2,7 +2,7 @@ import { LinkIcon, X } from "lucide-react";
 import { createShortUrl, updateUrl } from "../../services/urlServices";
 import { useState, useEffect } from "react";
 
-const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null }) => {
+const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, updateUrlsLocally }) => {
   const [shortUrl, setShortUrl] = useState('');
   const [longUrl, setLongUrl] = useState('');
   const [description, setDescription] = useState('');
@@ -11,20 +11,36 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null }
   const handleAddOrUpdateUrl = async () => {
     try {
       if (edit && item) {
-        // Solo actualiza si la URL corta, larga, descripción o etiquetas han cambiado
-        if (shortUrl !== item.shortUrl || longUrl !== item.longUrl || description !== item.description || selectedTags !== item.tags) {
-          await updateUrl(item.shortUrl, item.longUrl, shortUrl, longUrl);
-        }
+        const updatedUrl = {
+          ...item,
+          shortUrl,
+          longUrl,
+          description,
+          tags: selectedTags,
+        };
+        
+        await updateUrl(item.shortUrl, item.longUrl, shortUrl, longUrl);
+        updateUrlsLocally(updatedUrl, true);
+        console.log(typeof updateUrlsLocally)
       } else {
-        // Crea una nueva URL
-        await createShortUrl(userId, longUrl, shortUrl, selectedTags, description);
+        const newUrl = await createShortUrl(userId, longUrl, shortUrl, selectedTags, description);
+        let cosita = {
+            id: newUrl.id,
+            shortUrl,
+            longUrl,
+            description,
+            tags: selectedTags,
+        }
+        console.log(typeof updateUrlsLocally)
+        console.log(newUrl)
+        console.log(cosita);
+        updateUrlsLocally(cosita);
       }
       setShowUrlForm(false);
     } catch (e) {
       console.error(e);
     }
   };
-
   useEffect(() => {
     if (edit && item) {
       setShortUrl(item.shortUrl);

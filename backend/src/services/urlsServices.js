@@ -22,6 +22,7 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
     const result = {
         url: shortUrl,
         success: false,
+        id: null
     };
     console.log("Iniciando transacción...");
     const transaction = await client.transaction("write");
@@ -56,8 +57,8 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
                 }
             }
         }
-        
 
+        result.id = rows[0].id;
         result.success = true;
         await transaction.commit();
         return result;
@@ -100,9 +101,9 @@ export const deleteUrl = async(shortUrl) =>{
         if(!shortUrl){
             throw new Error("No url");
         }
-    
+        console.log(shortUrl);
         const response = await client.execute({
-            sql: "DELETE * FROM urls WHERE short_url = ?",
+            sql: "DELETE FROM urls WHERE short_url = ?",
             args: [shortUrl]
         });
         if (response.rowsAffected == 0){

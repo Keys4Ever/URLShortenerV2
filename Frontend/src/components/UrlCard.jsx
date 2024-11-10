@@ -1,11 +1,10 @@
-// UrlCard.jsx
-
 import { useState } from 'react';
 import { Copy, Edit, Trash2, QrCode, Check } from 'lucide-react';
 import QRCode from 'qrcode';
 import AddUrlModal from '../pages/Dashboard/AddUrlModal';
+import { deleteUrl } from '../services/urlServices'; // Asegúrate de importar esto
 
-const UrlCard = ({ item, userId, onUpdate }) => {
+const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally }) => {
   const shortUrl = "https://keys.lat/" + item.shortUrl;
 
   const [showUrlForm, setShowUrlForm] = useState(false);
@@ -37,6 +36,18 @@ const UrlCard = ({ item, userId, onUpdate }) => {
     setShowUrlForm(true);
   };
 
+  const handleDeleteUrl = async () => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta URL?')) {
+      try {
+        await deleteUrl(item.shortUrl);
+        deleteUrlLocally(item.id);
+      } catch (error) {
+        console.error('Error al eliminar la URL:', error);
+        alert('Error al eliminar la URL');
+      }
+    }
+  };
+
   return (
     <>
       {showUrlForm && (
@@ -46,10 +57,7 @@ const UrlCard = ({ item, userId, onUpdate }) => {
           userId={userId}
           edit={true}
           item={item}
-          onSave={() => {
-            setShowUrlForm(false);
-            onUpdate(); // Llama a onUpdate después de guardar
-          }}
+          updateUrlsLocally={updateUrlsLocally}
         />
       )}
       <div className="p-4 border-2 border-white">
@@ -85,10 +93,16 @@ const UrlCard = ({ item, userId, onUpdate }) => {
               <p className="text-sm text-gray-400">{item.date || "Fecha no disponible"}</p>
             </div>
             <div className="flex items-center gap-2">
-              <button className="p-2 hover:bg-white hover:text-black transition rounded" onClick={handleEditUrl}>
+              <button 
+                className="p-2 hover:bg-white hover:text-black transition rounded" 
+                onClick={handleEditUrl}
+              >
                 <Edit className="w-5 h-5" />
               </button>
-              <button className="p-2 hover:bg-white hover:text-black transition rounded">
+              <button 
+                className="p-2 hover:bg-white hover:text-black transition rounded"
+                onClick={handleDeleteUrl}
+              >
                 <Trash2 className="w-5 h-5" />
               </button>
             </div>

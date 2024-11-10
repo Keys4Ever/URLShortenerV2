@@ -10,16 +10,24 @@ export default function Dashboard() {
   const { auth, loading } = useAuth();
   const userId = auth.user ? auth.user.sub.split('|')[1] : null;
 
-  useEffect(() => {
-    if (!loading && !auth.authenticated) {
-      window.location.href = "http://localhost:3000/auth/login";
-    }
-  }, [loading, auth.authenticated]);
-
-  // Mover urlItems y tags fuera de dashboardState
   const [urlItems, setUrlItems] = useState([]);
   const [tags, setTags] = useState([]);
   const [isLoadingTags, setIsLoadingTags] = useState(true);
+
+  // Función para actualizar URLs localmente
+  const updateUrlsLocally = (newUrl, isEditing = false) => {
+    setUrlItems(prevUrls => {
+      if (isEditing) {
+        return prevUrls.map(url => url.id === newUrl.id ? newUrl : url);
+      }
+      return [...prevUrls, newUrl];
+    });
+  };
+
+  // Función para eliminar URLs localmente
+  const deleteUrlLocally = (urlId) => {
+    setUrlItems(prevUrls => prevUrls.filter(url => url.id !== urlId));
+  };
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -36,7 +44,6 @@ export default function Dashboard() {
         console.error('Error al cargar datos iniciales:', error);
       } finally {
         setIsLoadingTags(false);
-        console.log(urlItems);
       }
     };
 
@@ -52,10 +59,21 @@ export default function Dashboard() {
       <div className="max-w-[900px] mx-auto">
         <main className="py-8">
           <TagsSection tags={tags} setTags={setTags} isLoading={isLoadingTags} userId={userId} />
-          <SearchAndActionBar tags={tags} userId={userId} />
+          <SearchAndActionBar 
+            tags={tags} 
+            userId={userId} 
+            updateUrlsLocally={updateUrlsLocally}
+          />
           <div className="space-y-2">
             {urlItems.map((item) => (
-              <UrlCard key={item.id} item={item} userId={userId} />
+              <UrlCard 
+                key={item.id} 
+                item={item} 
+                userId={userId}
+                tags={tags}
+                updateUrlsLocally={updateUrlsLocally}
+                deleteUrlLocally={deleteUrlLocally}
+              />
             ))}
           </div>
         </main>
