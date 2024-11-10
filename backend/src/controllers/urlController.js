@@ -59,8 +59,6 @@ const updateUrlController = async (req, res) => {
         const result = await updateUrl(currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags);
 
         if (result.error) {
-            console.log('Bad request');
-            console.log(result);
             return res.status(400).json({ error: result.error });
         }
 

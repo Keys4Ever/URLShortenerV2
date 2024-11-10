@@ -128,7 +128,6 @@ export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, ne
     if (currentLongUrl === newLongUrl && currentShortUrl === newShortUrl) {
         const addedTags = tags.filter(tag => !currentTags.some(currentTag => currentTag.id === tag.id));
         const removedTags = currentTags.filter(currentTag => !tags.some(tag => tag.id === currentTag.id));
-        console.log("addedTags: ", addedTags, "removedTags: ", removedTags);
         if (addedTags.length === 0 && removedTags.length === 0) {
             return { error: "No changes detected" };
         }
