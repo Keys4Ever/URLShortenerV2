@@ -15,6 +15,11 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
       setError('');
       setIsSubmitting(true);
 
+      if(!longUrl){
+        setError("An url is required to be shortened");
+        return;
+      }
+
       if (edit && item) {
         const updatedUrl = {
           ...item,
@@ -23,7 +28,11 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
           description,
           tags: selectedTags,
         };
-        await updateUrl(item.shortUrl, item.longUrl, shortUrl, longUrl);
+        await updateUrl(item.shortUrl, item.longUrl, shortUrl, longUrl, selectedTags, item.tags);
+        if(updateUrl.error){
+          setError(updateUrl.error);
+          return;
+        }
         updateUrlsLocally(updatedUrl, true);
       } else {
         const newUrl = await createShortUrl(userId, longUrl, shortUrl, selectedTags, description);
@@ -123,7 +132,6 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
                 type="url"
                 value={longUrl}
                 onChange={(e) => setLongUrl(e.target.value)}
-                required
                 placeholder="https://example.com/areallyreally/verylongurl/butreallylong"
                 className="flex-1 p-2 bg-transparent focus:outline-none"
               />

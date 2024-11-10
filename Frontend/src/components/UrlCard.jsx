@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 import AddUrlModal from '../pages/Dashboard/AddUrlModal';
 import { deleteUrl } from '../services/urlServices'; // Asegúrate de importar esto
 
-const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally }) => {
+const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) => {
   const shortUrl = "https://keys.lat/" + item.shortUrl;
 
   const [showUrlForm, setShowUrlForm] = useState(false);
@@ -52,7 +52,7 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally }) => {
     <>
       {showUrlForm && (
         <AddUrlModal
-          tags={item.tags}
+          tags={tags}
           setShowUrlForm={setShowUrlForm}
           userId={userId}
           edit={true}
