@@ -7,9 +7,14 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
   const [longUrl, setLongUrl] = useState('');
   const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddOrUpdateUrl = async () => {
     try {
+      setError('');
+      setIsSubmitting(true);
+
       if (edit && item) {
         const updatedUrl = {
           ...item,
@@ -18,29 +23,38 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
           description,
           tags: selectedTags,
         };
-        
         await updateUrl(item.shortUrl, item.longUrl, shortUrl, longUrl);
         updateUrlsLocally(updatedUrl, true);
-        console.log(typeof updateUrlsLocally)
       } else {
         const newUrl = await createShortUrl(userId, longUrl, shortUrl, selectedTags, description);
-        let cosita = {
-            id: newUrl.id,
-            shortUrl,
-            longUrl,
-            description,
-            tags: selectedTags,
+        
+        if (newUrl.error) {
+          setError(newUrl.error);
+          return;
         }
-        console.log(typeof updateUrlsLocally)
-        console.log(newUrl)
-        console.log(cosita);
-        updateUrlsLocally(cosita);
+
+        let urlData = {
+          id: newUrl.id,
+          shortUrl,
+          longUrl,
+          description,
+          tags: selectedTags,
+        };
+        updateUrlsLocally(urlData);
       }
       setShowUrlForm(false);
     } catch (e) {
-      console.error(e);
+      console.log(e.message);
+      if (e.message === "Invalid short URL") {
+        setError("La URL corta solo puede contener letras, números y los siguientes caracteres especiales: -._~:/?#[]@!$&'()*+,;=");
+      } else {
+        setError("Ha ocurrido un error al procesar tu solicitud. Por favor, intenta de nuevo.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
   useEffect(() => {
     if (edit && item) {
       setShortUrl(item.shortUrl);
@@ -53,6 +67,7 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
   const handleShortUrlChange = (e) => {
     const value = e.target.value.replace('https://keys.lat/', '');
     setShortUrl(value);
+    setError(''); // Clear error when user starts typing
   };
 
   const handleTagSelection = (tagId, tagName) => {
@@ -76,6 +91,13 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {error && (
+          <div className="mb-4 p-4 bg-red-900 border-2 border-red-500 text-white">
+            <p className="text-sm">{error}</p>
+          </div>
+        )}
+
         <form
           className="space-y-4"
           onSubmit={(e) => {
@@ -90,12 +112,12 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
               value={`https://keys.lat/${shortUrl}`}
               onChange={handleShortUrlChange}
               placeholder="Leave blank for random"
-              className="w-full p-2 bg-black border-2 border-white"
+              className={`w-full p-2 bg-black border-2 ${error ? 'border-red-500' : 'border-white'}`}
             />
           </div>
           <div>
             <label className="block mb-2">Long URL</label>
-            <div className="flex items-center border-2 border-white">
+            <div className={`flex items-center border-2 ${error ? 'border-red-500' : 'border-white'}`}>
               <LinkIcon className="w-5 h-5 mx-2" />
               <input
                 type="url"
@@ -130,18 +152,26 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
                   {tag.name}
                 </label>
               ))}
-              
             </div>
           </div>
           <div className="flex justify-end gap-4 pt-4">
             <button
+              type="button"
               onClick={() => setShowUrlForm(false)}
               className="px-4 py-2 border border-white hover:bg-white hover:text-black transition"
             >
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 bg-white text-black hover:bg-gray-200 transition">
-              {edit ? "Save Changes" : "Create URL"}
+            <button 
+              type="submit" 
+              className="px-4 py-2 bg-white text-black hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isSubmitting}
+            >
+              {isSubmitting 
+                ? "Processing..." 
+                : edit 
+                  ? "Save Changes" 
+                  : "Create URL"}
             </button>
           </div>
         </form>
