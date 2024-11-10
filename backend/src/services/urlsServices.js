@@ -122,12 +122,13 @@ export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, ne
     let query = "UPDATE urls SET ";
     let args = [];
     let updates = [];
+    console.log("currentTags: ", currentTags, "tags: ", tags);
 
     // Validación: Si los valores actuales y los nuevos son iguales, no hay nada que actualizar
     if (currentLongUrl === newLongUrl && currentShortUrl === newShortUrl) {
-        const addedTags = tags.filter(tag => !currentTags.includes(tag));
-        const removedTags = currentTags.filter(tag => !tags.includes(tag));
-
+        const addedTags = tags.filter(tag => !currentTags.some(currentTag => currentTag.id === tag.id));
+        const removedTags = currentTags.filter(currentTag => !tags.some(tag => tag.id === currentTag.id));
+        console.log("addedTags: ", addedTags, "removedTags: ", removedTags);
         if (addedTags.length === 0 && removedTags.length === 0) {
             return { error: "No changes detected" };
         }
@@ -188,20 +189,20 @@ export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, ne
         }
 
         // Actualizar las etiquetas
-        const addedTags = tags.filter(tag => !currentTags.includes(tag));
-        const removedTags = currentTags.filter(tag => !tags.includes(tag));
+        const addedTags = tags.filter(tag => !currentTags.some(currentTag => currentTag.id === tag.id));
+        const removedTags = currentTags.filter(currentTag => !tags.some(tag => tag.id === currentTag.id));
 
         for (const tag of addedTags) {
             await transaction.execute({
-                sql: "INSERT INTO url_tags (url_id, tag) VALUES ((SELECT id FROM urls WHERE short_url = ?), ?)",
-                args: [newShortUrl || currentShortUrl, tag],
+                sql: "INSERT INTO url_tags (url_id, tag_id) VALUES ((SELECT id FROM urls WHERE short_url = ?), ?)",
+                args: [newShortUrl || currentShortUrl, tag.id],
             });
         }
 
         for (const tag of removedTags) {
             await transaction.execute({
-                sql: "DELETE FROM url_tags WHERE url_id = (SELECT id FROM urls WHERE short_url = ?) AND tag = ?",
-                args: [newShortUrl || currentShortUrl, tag],
+                sql: "DELETE FROM url_tags WHERE url_id = (SELECT id FROM urls WHERE short_url = ?) AND tag_id = ?",
+                args: [newShortUrl || currentShortUrl, tag.id],
             });
         }
 
@@ -216,6 +217,7 @@ export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, ne
         throw error;
     }
 };
+
 
 
 export const getUserUrls = async (userId) => {

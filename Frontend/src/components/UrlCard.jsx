@@ -110,7 +110,7 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
           {item.tags.map((tag) => (
-            <span key={tag.id} className="px-2 py-1 border border-gray-400 text-sm text-gray-400 rounded">
+            <span key={tag.id} className="px-2 py-1 border border-gray-400 text-sm text-gray-400">
               {tag.name}
             </span>
           ))}

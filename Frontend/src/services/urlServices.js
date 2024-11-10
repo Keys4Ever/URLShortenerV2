@@ -33,7 +33,7 @@ export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, ne
     const response = await fetch(`${API_BASE_URL}api/url`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentShortUrl, currentLongUrl, newShortUrl, newLongUrl })
+        body: JSON.stringify({ currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags })
     });
     return await response.json();
 };
