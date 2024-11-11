@@ -23,12 +23,14 @@ const HeroSection = () => {
                         label="Get Started"
                         place="right"
                         link={auth.authenticated ? "/dashboard" : "http://localhost:3000/login"}
+                        external={true}
                         icon={<ExternalLink />}
                     />
                     <ABtn
                         label="Github Repo"
                         link="https://github.com/Keys4Ever/URLShortenerV2"
                         icon={<Github />}
+                        external={true}
                     />
                 </div>
             </div>
