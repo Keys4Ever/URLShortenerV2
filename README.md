@@ -11,6 +11,13 @@ Second version of my URL Shortener. This one will have a frontend with React, an
 - [ ] Tags guardarlas en localstorage, así cuando se hace el edit se llena el formulario mas rápido y no tiene que estar recuperando del back, o añadir preloaders, lo que diga nuestro todo poderoso dios https://wheelofnames.com/
 - [ ] Fixear el overflow del dropdown menú del perfil. 
 - [ ] En vez del svg usar la foto de perfil del usuario
+- [ ] Skeleton loaders para cuando se estén cargando las urls
 
 ### Settings
 - [ ] Cambiar foto
+
+
+### Refactors
+- [ ] Cambiar base de datos a postgresql (render) o mongodb
+- [ ] Arquitectura frontend: Screaming arq
+- [ ] Quizás refactorizar el dashboard -> dejar de usar las actualizaciones en el front, podemos permitirnos hacer llamadas al backend
