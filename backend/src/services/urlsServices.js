@@ -4,7 +4,7 @@ import {addUrlToUrlStats} from './urlStatServices.js'
 import { nanoid } from 'nanoid'
 
 export const createShortUrl = async (userId, longUrl, shortUrl, tags, description) => {
-    const regex = /^[a-zA-Z0-9\-._~:\/?#[\]@!$&'()*+,;=]+$/;
+    const regex = /^[a-zA-Z0-9]+$/;
     if (!userId) {
         return { error: "User ID es necesario" };
     }
