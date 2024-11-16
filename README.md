@@ -3,7 +3,7 @@ Second version of my URL Shortener. This one will have a frontend with React, an
 
 
 
-## TODO
+## TO-DO
 - [ ] Hacer que el input del longurl no sea type url, si no que añada el https:// o http:// si no los tiene
 - [ ] Cambiar todos los Href por navigate (Siempre y cuando sean dentro del front)
 - [ ] Quick shorten en el home
