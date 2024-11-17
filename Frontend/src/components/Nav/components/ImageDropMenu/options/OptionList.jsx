@@ -9,7 +9,7 @@ const OptionList = () => {
     return (
         <ul 
             aria-labelledby="user-menu-button" 
-            className="flex flex-col gap-2 w-full max-w-xs bg-white dark:bg-black"
+            className="flex flex-col w-full max-w-xs bg-white dark:bg-black"
         >
             <Option 
                 icon={<LayoutDashboard className="w-5 h-5 sm:w-6 sm:h-6" />} 
