@@ -48,7 +48,6 @@ const TagsSection = ({ tags, isLoading, setTags, userId }) => {
                                 userId={userId}
                                 handleEditTag={handleEditTag}
                                 key={tag.id}
-
                             />
                     ))
                 )}

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import AddUrlModal from "./AddUrlModal";
 import { getUserUrls } from "../../services/urlServices";
 
-const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems }) => {
+const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems, tagLoading }) => {
     const [searchBy, setSearchBy] = useState('short');
     const [showUrlForm, setShowUrlForm] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -53,6 +53,7 @@ const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems }) =>
                     setShowUrlForm={setShowUrlForm}
                     userId={userId}
                     updateUrlsLocally={updateUrlsLocally}
+                    tagLoading={tagLoading}
                 />
             )}
             <div className="relative flex-1 max-w-md">

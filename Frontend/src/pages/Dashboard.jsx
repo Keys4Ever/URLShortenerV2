@@ -77,6 +77,7 @@ export default function Dashboard() {
                 tags={tags}
                 updateUrlsLocally={updateUrlsLocally}
                 deleteUrlLocally={deleteUrlLocally}
+                tagLoading={isLoadingTags}
               />
             ))}
           </div>

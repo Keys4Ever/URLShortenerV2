@@ -1,8 +1,9 @@
 import { LinkIcon, X } from "lucide-react";
 import { createShortUrl, updateUrl } from "../../services/urlServices";
 import { useState, useEffect } from "react";
+import SkeletonTag from "./SkeletonTag.jsx";
 
-const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, updateUrlsLocally }) => {
+const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, updateUrlsLocally, tagLoading }) => {
   const [shortUrl, setShortUrl] = useState('');
   const [longUrl, setLongUrl] = useState('');
   const [description, setDescription] = useState('');
@@ -79,6 +80,7 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
       alert(alerta)
     }
   },[alerta])
+
   useEffect(() => {
     if (edit && item) {
       setShortUrl(item.shortUrl);
@@ -164,17 +166,20 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
           <div>
             <label className="block mb-2">Tags</label>
             <div className="flex flex-wrap gap-2 p-2 border-2 border-white">
-              {tags.map((tag) => (
-                <label key={tag.id} className="flex items-center gap-2 p-2 border border-white">
-                  <input
-                    type="checkbox"
-                    checked={selectedTags.some((selectedTag) => selectedTag.id === tag.id)}
-                    onChange={() => handleTagSelection(tag.id, tag.name)}
-                    title={tag.description}
-                  />
-                  {tag.name}
-                </label>
-              ))}
+              {tagLoading ? 
+                <SkeletonTag /> : 
+                    tags.map((tag) => (
+                      <label key={tag.id} className="flex items-center gap-2 p-2 border border-white">
+                        <input
+                          type="checkbox"
+                          checked={selectedTags.some((selectedTag) => selectedTag.id === tag.id)}
+                          onChange={() => handleTagSelection(tag.id, tag.name)}
+                          title={tag.description}
+                        />
+                        {tag.name}
+                      </label>
+                    ))
+              }
             </div>
           </div>
           <div className="flex justify-end gap-4 pt-4">
