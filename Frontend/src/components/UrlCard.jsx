@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Copy, Edit, Trash2, QrCode, Check } from 'lucide-react';
 import QRCode from 'qrcode';
 import AddUrlModal from '../pages/Dashboard/AddUrlModal';
-import { deleteUrl } from '../services/urlServices'; // Asegúrate de importar esto
+import { deleteUrl } from '../services/urlServices';
 
 const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) => {
   const shortUrl = "https://keys.lat/" + item.shortUrl;
@@ -68,12 +68,14 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
               <button
                 className="p-1 hover:bg-white hover:text-black transition rounded"
                 onClick={handleCopyUrl}
+                title='Copy short url'
               >
                 {copying ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               </button>
               <button
                 className="p-1 hover:bg-white hover:text-black transition rounded"
                 onClick={copyQrCode}
+                title='Copy short url as QRCode'
               >
                 {qrCopied ? <Check className="w-4 h-4" /> : <QrCode className="w-4 h-4" />}
               </button>
