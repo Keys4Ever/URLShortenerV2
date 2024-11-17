@@ -15,13 +15,13 @@ const ImageDropMenu = () => {
         <div className="relative z-50">
             <button
                 type="button"
-                className="flex items-center justify-center w-10 h-10 bg-black text-white border-2 border-white rounded-full hover:bg-white hover:text-black focus:outline-none transition-colors duration-200"
+                className="flex items-center justify-center w-10 h-10 bg-black text-white border-2 border-white hover:bg-white hover:text-black focus:outline-none transition-colors duration-200"
                 id="user-menu-button"
                 aria-expanded={isOpen}
                 onClick={toggleDropdown}
             >
                 <span className="sr-only">Open user menu</span>
-                <User className="w-5 h-5" />
+                {auth?.user?.picture ? <img src={auth.user.picture}  className='w-10'/> : <User className='w-5 h-5' />}
             </button>
             
             {isOpen && (
@@ -30,8 +30,8 @@ const ImageDropMenu = () => {
                     id="user-dropdown"
                 >
                     <div className="px-4 py-3 border-b-2 border-white text-center">
-                        <span className="block text-sm font-bold">{auth.user?.email || 'Usuario'}</span>
-                        <span className="block text-xs text-gray-400">Free Plan</span>
+                        <span className="block text-sm font-bold">{auth.user?.nickname || 'Usuario'}</span>
+                        <span className="block text-xs text-gray-400">{auth.user?.email || 'No hay email'}</span>
                     </div>
                     <OptionList />
                 </div>
