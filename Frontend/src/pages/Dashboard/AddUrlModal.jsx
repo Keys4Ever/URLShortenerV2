@@ -13,44 +13,49 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
 
 
   const handleAddOrUpdateUrl = async () => {
+    let finalLongUrl = longUrl;
+    
+    // Validar y corregir el formato de la URL antes de usarla
+    if (!finalLongUrl.startsWith('https://') && !finalLongUrl.startsWith('http://')) {
+      setAlerta('No detectamos que su URL empiece con https o http, por defecto se añadirá https. Puede cambiarlo en edición.');
+      finalLongUrl = 'https://' + finalLongUrl;
+    }
+  
     try {
       setError('');
       setIsSubmitting(true);
-
-      if(!longUrl){
-        setError("An url is required to be shortened");
+  
+      if (!finalLongUrl) {
+        setError("An URL is required to be shortened");
         return;
-      }else if(!longUrl.startsWith('https://') && !longUrl.startsWith('http://')){
-        setAlerta('No detectamos que su url empiece con https o http, por defecto se añadirá https, puede cambiarlo en edición');
-        setLongUrl('https://'+longUrl);
       }
-
+  
       if (edit && item) {
         const updatedUrl = {
           ...item,
           shortUrl,
-          longUrl,
+          longUrl: finalLongUrl, // Usar la URL procesada
           description,
           tags: selectedTags,
         };
-        await updateUrl(item.shortUrl, item.longUrl, shortUrl, longUrl, selectedTags, item.tags);
-        if(updateUrl.error){
+        await updateUrl(item.shortUrl, item.longUrl, shortUrl, finalLongUrl, selectedTags, item.tags);
+        if (updateUrl.error) {
           setError(updateUrl.error);
           return;
         }
         updateUrlsLocally(updatedUrl, true);
       } else {
-        const newUrl = await createShortUrl(userId, longUrl, shortUrl, selectedTags, description);
-        
+        const newUrl = await createShortUrl(userId, finalLongUrl, shortUrl, selectedTags, description);
+  
         if (newUrl.error) {
           setError(newUrl.error);
           return;
         }
-
+  
         let urlData = {
           id: newUrl.id,
           shortUrl,
-          longUrl,
+          longUrl: finalLongUrl, // Usar la URL procesada
           description,
           tags: selectedTags,
         };
@@ -68,7 +73,7 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
       setIsSubmitting(false);
     }
   };
-
+  
   useEffect(()=>{
     if (alerta){
       alert(alerta)
