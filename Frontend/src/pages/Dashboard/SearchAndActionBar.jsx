@@ -32,12 +32,23 @@ const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems, tagL
         if (searchQuery.trim() === '') {
             setUrlItems(originalUrls);
         } else {
-            const filteredUrls = originalUrls.filter(url =>
-                searchBy === 'short'
-                    ? url.shortUrl.toLowerCase().includes(searchQuery.trim().toLowerCase())
-                    : url.longUrl.toLowerCase().includes(searchQuery.trim().toLowerCase())
-            );
-            setUrlItems(filteredUrls);
+            const query = searchQuery.trim().toLowerCase();
+            if (searchBy === 'short') {
+                const filteredUrls = originalUrls.filter(url =>
+                    url.shortUrl.toLowerCase().includes(query)
+                );
+                setUrlItems(filteredUrls);
+            } else if (searchBy === 'long') {
+                const filteredUrls = originalUrls.filter(url =>
+                    url.longUrl.toLowerCase().includes(query)
+                );
+                setUrlItems(filteredUrls);
+            } else if (searchBy === 'tags') {
+                const filteredUrls = originalUrls.filter(url =>
+                    url.tags.some(tag => tag.name.toLowerCase().includes(query))
+                );
+                setUrlItems(filteredUrls);
+            }
         }
     }, [searchQuery, searchBy, originalUrls, setUrlItems]);
 
@@ -62,13 +73,16 @@ const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems, tagL
                     type="text"
                     value={searchQuery}
                     onChange={handleSearch}
-                    placeholder={`Search by ${searchBy} URL...`}
+                    placeholder={`Search by ${searchBy !== 'tags' ? searchBy + " URL..." : searchBy}`}
                     className="w-full pl-10 pr-32 py-2 bg-transparent border-2 border-white focus:outline-none"
                 />
                 <div className="absolute right-0 top-0 h-full">
                     <button
                         className="h-full px-4 border-l-2 border-white hover:bg-white hover:text-black transition font-bold"
-                        onClick={() => setSearchBy(searchBy === 'short' ? 'long' : 'short')}
+                        onClick={() => {
+                            const nextSearchBy = searchBy === 'short' ? 'tags' : searchBy === 'tags' ? 'long' : 'short';
+                            setSearchBy(nextSearchBy);
+                        }}
                     >
                         {searchBy.toUpperCase()}
                     </button>

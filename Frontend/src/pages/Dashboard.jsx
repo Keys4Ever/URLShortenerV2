@@ -39,10 +39,7 @@ export default function Dashboard() {
 
       try {
         setIsLoadingTags(true);
-        const urls = await getUserUrls(userId);
         const fetchedTags = await getAllTags(userId);
-
-        setUrlItems(urls.length ? urls : []);
         setTags(fetchedTags.tags.length ? fetchedTags.tags : []);
       } catch (error) {
         console.error('Error al cargar datos iniciales:', error);
@@ -59,7 +56,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-[900px] mx-auto">
         <main className="py-8">
-          <TagsSection tags={tags} setTags={setTags} isLoading={isLoadingTags} userId={userId} />
+          <TagsSection tags={tags} setTags={setTags} isLoading={isLoadingTags} userId={userId} setUrlItems={setUrlItems}/>
           <SearchAndActionBar 
             tags={tags} 
             userId={userId} 

@@ -1,14 +1,50 @@
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
-import Tag from '../../components/Tag';
-import AddTagModal from './AddTagModal';
-import SkeletonTag from './SkeletonTag';
+import { useState, useEffect } from "react";
+import { Plus } from "lucide-react";
+import Tag from "../../components/Tag";
+import AddTagModal from "./AddTagModal";
+import SkeletonTag from "./SkeletonTag";
+import { getUserUrls } from "../../services/urlServices";
 
-const TagsSection = ({ tags, isLoading, setTags, userId }) => {
+const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false);
     const [tagIdToEdit, setTagIdToEdit] = useState(null);
     const [edit, setEdit] = useState(false);
+    const [originalUrls, setOriginalUrls] = useState([]);
+
+    
+    // Obtener URLs del usuario
+    useEffect(() => {
+        const fetchUserUrls = async () => {
+            console.log('fetched')
+            try {
+                const urls = await getUserUrls(userId);
+                setOriginalUrls(urls);
+                setUrlItems(urls);
+            } catch (error) {
+                console.error("Error fetching user URLs:", error);
+                setOriginalUrls([]);
+                setUrlItems([]);
+            }
+        };
+
+        if (userId) {
+            fetchUserUrls();
+        }
+    }, [userId]);
+
+
+    // Filtrar URLs por etiquetas seleccionadas
+    useEffect(() => {
+        if (selectedTags.length === 0) {
+            setUrlItems(originalUrls); // Muestra todas las URLs si no hay etiquetas seleccionadas
+        } else {
+            const filteredUrls = originalUrls.filter(url =>
+                url.tags.some(tag => selectedTags.includes(tag.name)) // URLs que tienen alguna etiqueta seleccionada
+            );
+            setUrlItems(filteredUrls);
+        }
+    }, [selectedTags, originalUrls, setUrlItems]);
 
     const addTag = (newTag) => {
         console.log(newTag);
@@ -33,30 +69,31 @@ const TagsSection = ({ tags, isLoading, setTags, userId }) => {
                 />
             )}
             <div className="flex flex-wrap gap-2 mb-4">
-                {isLoading ? 
+                {isLoading ? (
                     <>
-                    <SkeletonTag bigTag /> 
-                    <SkeletonTag bigTag />
+                        <SkeletonTag bigTag />
+                        <SkeletonTag bigTag />
                     </>
-                    : 
-                    tags.length === 0 ? (
-                        <p className='text-black dark:text-white'>No tags found</p>
-                    ) : (
-                        tags.map(tag => (
-                                <Tag
-                                    setTags={setTags}
-                                    selectedTags={selectedTags}
-                                    setSelectedTags={setSelectedTags}
-                                    tag={tag}
-                                    userId={userId}
-                                    handleEditTag={handleEditTag}
-                                    key={tag.id}
-                                />
-                        ))
-                    )
-                }
+                ) : tags.length === 0 ? (
+                    <p className="text-black dark:text-white">No tags found</p>
+                ) : (
+                    tags.map((tag) => (
+                        <Tag
+                            setTags={setTags}
+                            selectedTags={selectedTags}
+                            setSelectedTags={setSelectedTags}
+                            tag={tag}
+                            userId={userId}
+                            handleEditTag={handleEditTag}
+                            key={tag.id}
+                        />
+                    ))
+                )}
             </div>
-            <button onClick={() => setShowAddForm(true)} className="flex items-center gap-2 px-4 py-2 border border-white hover:bg-white hover:text-black transition">
+            <button
+                onClick={() => setShowAddForm(true)}
+                className="flex items-center gap-2 px-4 py-2 border border-white hover:bg-white hover:text-black transition"
+            >
                 <Plus className="w-4 h-4" />
                 Add Tag
             </button>
