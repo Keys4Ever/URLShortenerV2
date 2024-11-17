@@ -2,31 +2,14 @@ import { Plus, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import AddUrlModal from "./AddUrlModal";
 import { getUserUrls } from "../../services/urlServices";
+import useUserUrls from "../../hooks/useUserUrls";
 
 const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems, tagLoading }) => {
     const [searchBy, setSearchBy] = useState('short');
     const [showUrlForm, setShowUrlForm] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [originalUrls, setOriginalUrls] = useState([]);
 
-    // Obtener URLs del usuario
-    useEffect(() => {
-        const fetchUserUrls = async () => {
-            try {
-                const urls = await getUserUrls(userId);
-                setOriginalUrls(urls);
-                setUrlItems(urls);
-            } catch (error) {
-                console.error("Error fetching user URLs:", error);
-                setOriginalUrls([]);
-                setUrlItems([]);
-            }
-        };
-
-        if (userId) {
-            fetchUserUrls();
-        }
-    }, [userId]);
+    const originalUrls = useUserUrls(userId, setUrlItems)
 
     useEffect(() => {
         if (searchQuery.trim() === '') {

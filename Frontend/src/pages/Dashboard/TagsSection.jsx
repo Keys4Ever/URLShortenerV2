@@ -3,44 +3,23 @@ import { Plus } from "lucide-react";
 import Tag from "../../components/Tag";
 import AddTagModal from "./AddTagModal";
 import SkeletonTag from "./SkeletonTag";
-import { getUserUrls } from "../../services/urlServices";
+import useUserUrls from "../../hooks/useUserUrls";
 
 const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false);
     const [tagIdToEdit, setTagIdToEdit] = useState(null);
     const [edit, setEdit] = useState(false);
-    const [originalUrls, setOriginalUrls] = useState([]);
 
-    
-    // Obtener URLs del usuario
-    useEffect(() => {
-        const fetchUserUrls = async () => {
-            console.log('fetched')
-            try {
-                const urls = await getUserUrls(userId);
-                setOriginalUrls(urls);
-                setUrlItems(urls);
-            } catch (error) {
-                console.error("Error fetching user URLs:", error);
-                setOriginalUrls([]);
-                setUrlItems([]);
-            }
-        };
-
-        if (userId) {
-            fetchUserUrls();
-        }
-    }, [userId]);
-
+    const originalUrls = useUserUrls(userId, setUrlItems);
 
     // Filtrar URLs por etiquetas seleccionadas
     useEffect(() => {
         if (selectedTags.length === 0) {
             setUrlItems(originalUrls); // Muestra todas las URLs si no hay etiquetas seleccionadas
         } else {
-            const filteredUrls = originalUrls.filter(url =>
-                url.tags.some(tag => selectedTags.includes(tag.name)) // URLs que tienen alguna etiqueta seleccionada
+            const filteredUrls = originalUrls.filter((url) =>
+                url.tags.some((tag) => selectedTags.includes(tag.name)) // URLs que tienen alguna etiqueta seleccionada
             );
             setUrlItems(filteredUrls);
         }
