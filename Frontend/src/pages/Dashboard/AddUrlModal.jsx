@@ -9,6 +9,8 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
   const [selectedTags, setSelectedTags] = useState([]);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [alerta, setAlerta] = useState('');
+
 
   const handleAddOrUpdateUrl = async () => {
     try {
@@ -18,6 +20,9 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
       if(!longUrl){
         setError("An url is required to be shortened");
         return;
+      }else if(!longUrl.startsWith('https://') && !longUrl.startsWith('http://')){
+        setAlerta('No detectamos que su url empiece con https o http, por defecto se añadirá https, puede cambiarlo en edición');
+        setLongUrl('https://'+longUrl);
       }
 
       if (edit && item) {
@@ -64,6 +69,11 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
     }
   };
 
+  useEffect(()=>{
+    if (alerta){
+      alert(alerta)
+    }
+  },[alerta])
   useEffect(() => {
     if (edit && item) {
       setShortUrl(item.shortUrl);
@@ -129,7 +139,7 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
             <div className={`flex items-center border-2 ${error ? 'border-red-500' : 'border-white'}`}>
               <LinkIcon className="w-5 h-5 mx-2" />
               <input
-                type="url"
+                type="text"
                 value={longUrl}
                 onChange={(e) => setLongUrl(e.target.value)}
                 placeholder="https://example.com/areallyreally/verylongurl/butreallylong"
