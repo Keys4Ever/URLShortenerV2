@@ -81,11 +81,10 @@ export const getOriginalUrl = async(shortUrl) =>{
         if(!shortUrl){
             throw new Error("No url");
         }
-        const query = {
+        const { rows } = await client.execute({
             sql: "SELECT original_url FROM urls WHERE short_url = ?",
             args:[shortUrl]
-        };
-        const { rows } = await client.execute(query);
+        });
 
         if (rows.length === 0) {
             throw new Error("notfound");
