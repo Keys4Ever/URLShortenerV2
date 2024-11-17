@@ -4,8 +4,8 @@ Second version of my URL Shortener. This one will have a frontend with React, an
 
 
 ## TO-DO
-- [ ] Hacer que el input del longurl no sea type url, si no que añada el https:// o http:// si no los tiene
-- [ ] Cambiar todos los Href por navigate (Siempre y cuando sean dentro del front)
+- [x] Hacer que el input del longurl no sea type url, si no que añada el https:// o http:// si no los tiene - Tanto front como back
+- [x] Cambiar todos los Href por navigate (Siempre y cuando sean dentro del front)
 - [ ] Quick shorten en el home
 - [ ] Forma de agregar un quickshortened a tu perfil (Con botón de confirmar y un secret censurado, guardar en bdd)
 - [ ] Tags guardarlas en localstorage, así cuando se hace el edit se llena el formulario mas rápido y no tiene que estar recuperando del back, o añadir preloaders, lo que diga nuestro todo poderoso dios https://wheelofnames.com/
