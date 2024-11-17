@@ -66,6 +66,7 @@ export default function Dashboard() {
             tags={tags} 
             userId={userId} 
             updateUrlsLocally={updateUrlsLocally}
+            setUrlItems={setUrlItems}
           />
           <div className="space-y-2">
             {urlItems.map((item) => (
