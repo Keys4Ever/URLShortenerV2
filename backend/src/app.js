@@ -48,14 +48,14 @@ app.get("/callback", (req, res) => {
 app.get('/:shortUrl', async(req, res) => {
     try {
         const shortUrl = req.params.shortUrl;
-        
+
         const originalUrl = await getOriginalUrl(shortUrl);
         
         if(originalUrl){
             await updateClicks(shortUrl);
         }
 
-        return res.redirect(originalUrl);
+        return res.redirect(originalUrl.startsWith('https://') ? originalUrl : originalUrl.startsWith('http://') ? originalUrl : 'https://'+originalUrl );
     } catch (error) {
         console.error("Error en endpoint:", error);
         if (error.message === 'notfound') {
