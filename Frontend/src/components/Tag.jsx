@@ -1,7 +1,7 @@
 import { Edit, X } from "lucide-react";
 import { deleteTag } from "../services/tagServices";
 
-const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId, handleEditTag, loading }) => {
+const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId, handleEditTag }) => {
     const handleDelete = async (id, userId) => {
         try {
             await deleteTag(userId, id);
@@ -14,9 +14,6 @@ const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId, handleEditTa
             alert("No se pudo eliminar la etiqueta. Por favor, intenta de nuevo.");
         }
     };
-    if(loading){
-        return <div>Loading...</div>
-    }
 
     return (
         <div key={tag.id} className="flex items-center gap-2 border border-white p-2">
