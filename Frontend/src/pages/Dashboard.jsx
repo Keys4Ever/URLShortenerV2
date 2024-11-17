@@ -5,6 +5,7 @@ import { getAllTags } from '../services/tagServices';
 import TagsSection from './Dashboard/TagsSection';
 import SearchAndActionBar from './Dashboard/SearchAndActionBar';
 import UrlCard from '../components/UrlCard';
+import UrlCardSkeleton from '../components/UrlCardSkeleton';
 export default function Dashboard() {
   const { auth, loading } = useAuth();
   const userId = auth.user ? auth.user.sub.split('|')[1] : null;
@@ -53,9 +54,6 @@ export default function Dashboard() {
     fetchInitialData();
   }, [userId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -69,7 +67,8 @@ export default function Dashboard() {
             setUrlItems={setUrlItems}
           />
           <div className="space-y-2">
-            {urlItems.map((item) => (
+          {isLoadingTags ? <UrlCardSkeleton /> :
+            urlItems.map((item) => (
               <UrlCard 
                 key={item.id} 
                 item={item} 
@@ -79,7 +78,8 @@ export default function Dashboard() {
                 deleteUrlLocally={deleteUrlLocally}
                 tagLoading={isLoadingTags}
               />
-            ))}
+            ))
+          }
           </div>
         </main>
       </div>
