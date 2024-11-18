@@ -1,5 +1,5 @@
 import { addTagToUrl } from "./tagsServices.js";
-import client from "../utils/turso.js"
+import client from "../utils/turso.js";
 import {addUrlToUrlStats} from './urlStatServices.js'
 import { nanoid } from 'nanoid'
 

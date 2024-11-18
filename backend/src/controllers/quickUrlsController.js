@@ -1,6 +1,6 @@
-import { createQuickUrl, connectUrlToAccController } from "../services/quickUrlsServices";
+import { createQuickUrl, connectUrlToAcc } from "../services/quickUrlsServices.js";
 // Controller para crear una Quick URL
-const createQuickUrlController = async (req, res) => {
+export const createQuickUrlController = async (req, res) => {
     try {
         const { shortUrl, longUrl } = req.body;
 
@@ -22,7 +22,7 @@ const createQuickUrlController = async (req, res) => {
 };
 
 // Controller para conectar una Quick URL a una cuenta
-const connectUrlToAccController = async (req, res) => {
+export const connectUrlToAccController = async (req, res) => {
     try {
         const { userId, secretKey } = req.body;
 
@@ -46,9 +46,4 @@ const connectUrlToAccController = async (req, res) => {
 
         return res.status(500).json({ error: error.message || "Error al conectar URL a cuenta" });
     }
-};
-
-export {
-    createQuickUrlController,
-    connectUrlToAccController
 };

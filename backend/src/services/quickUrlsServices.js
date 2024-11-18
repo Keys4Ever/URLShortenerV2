@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { createShortUrl } from './urlsServices';
-import client from '../utils/turso';
+import { createShortUrl } from './urlsServices.js';
+import client from '../utils/turso.js';
 
 const quickUser = '00000000000';
 export const createQuickUrl = async(shortUrl, longUrl) => {

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Link as LinkIcon, Copy, CheckCircle } from 'lucide-react';
+import SecretInput from './SecretInput.jsx';
+import { useAuth } from '../context/authContext.jsx';
 
-export default function QuickShorten() {
+const QuickShorten = () => {
+  const { auth, loading } = useAuth();
   const [url, setUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
   const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate API call
+    const secretKey = 'SECRETKEY'; // Simulación de clave secreta
     const generated = `keys.url/${Math.random().toString(36).substr(2, 6)}`;
     setShortUrl(generated);
     await navigator.clipboard.writeText(generated);
@@ -17,7 +20,8 @@ export default function QuickShorten() {
   };
 
   return (
-    <div className="border-4 border-white p-8">
+    <div className="border-4 border-white p-8 space-y-6">
+      {/* Formulario principal */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex items-center border-2 border-white">
           <LinkIcon className="w-5 h-5 mx-2" />
@@ -38,8 +42,19 @@ export default function QuickShorten() {
         </div>
       </form>
 
+      {/* Mostrar clave secreta si no está autenticado y ha cargado */}
+      {!loading && !auth.authenticated && shortUrl && (
+        <div className="space-y-2 border-2 border-white p-4">
+          <p className="text-sm text-gray-300">
+            Secret key (use this to link this to your acc):
+          </p>
+          <SecretInput secretKey="SECRETKEY" />
+        </div>
+      )}
+
+      {/* Mostrar URL acortada */}
       {shortUrl && (
-        <div className="mt-4 p-4 border-2 border-white">
+        <div className="p-4 border-2 border-white space-y-2">
           <div className="flex items-center justify-between">
             <span className="font-bold">{shortUrl}</span>
             <div className="flex items-center gap-2">
@@ -56,3 +71,6 @@ export default function QuickShorten() {
     </div>
   );
 }
+
+
+export default QuickShorten;
