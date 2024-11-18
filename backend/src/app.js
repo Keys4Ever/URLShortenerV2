@@ -12,6 +12,7 @@ import urlRoutes from './routes/urlRoutes.js';
 import urlStatRoutes from './routes/urlStatRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import tagsRoutes from './routes/tagsRoutes.js'
+import quickUrlRoutes from './routes/quickUrlsRoutes.js'
 import { getOriginalUrl } from "./services/urlsServices.js";
 import { updateClicks } from "./services/urlStatServices.js";
 
@@ -65,6 +66,7 @@ app.get('/:shortUrl', async(req, res) => {
     }
 });
 
+app.use("/api/quick", quickUrlRoutes);
 app.use("/api/users", userRoutes);
 app.use('/api/tags',  tagsRoutes);
 app.use("/clicks", urlStatRoutes);
