@@ -21,13 +21,13 @@ const LookURLSection = () => {
                 if (response?.originalUrl) {
                     setUrl(response.originalUrl);
                 } else {
-                    setUrl(null);  // Asegúrate de que `url` sea `null` si no se encuentra
+                    setUrl(null);
                 }
             } catch (error) {
                 console.error("Error fetching the original URL:", error);
-                setUrl(null);  // En caso de error, también aseguramos que `url` sea `null`
+                setUrl(null); 
             } finally {
-                setHasTried(true);  // Actualiza `hasTried` para mostrar mensaje de error si es necesario
+                setHasTried(true);
             }
         }
     };

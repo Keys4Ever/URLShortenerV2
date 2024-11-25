@@ -3,8 +3,9 @@ import { createShortUrl } from './urlsServices.js';
 import client from '../utils/turso.js';
 
 const quickUser = '00000000000';
-export const createQuickUrl = async(shortUrl, longUrl) => {
-    const result = await createShortUrl(quickUser, longUrl, shortUrl);
+export const createQuickUrl = async(longUrl) => {
+    const result = await createShortUrl(quickUser, longUrl);
+
     if(!result.success){
         throw new Error('Esto no tiene que pasar xd.')
     }
@@ -17,12 +18,18 @@ export const createQuickUrl = async(shortUrl, longUrl) => {
             sql:'INSERT INTO quick_urls (short_url, secret_key) VALUES (?, ?)',
             args:[result.url, secretKey]
         })
-        if (!response.ok){
+
+        if (!response.rowsAffected){
             throw new Error('Error al crear la url rápida')
         } 
+
         await transaction.commit();
 
-        return true;
+        return {
+            url: result.url,
+            secretKey: secretKey,
+            success: true
+        }
     } catch (error) {
         await transaction.rollback();
         throw error;

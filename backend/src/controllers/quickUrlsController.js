@@ -2,16 +2,16 @@ import { createQuickUrl, connectUrlToAcc } from "../services/quickUrlsServices.j
 // Controller para crear una Quick URL
 export const createQuickUrlController = async (req, res) => {
     try {
-        const { shortUrl, longUrl } = req.body;
+        const { longUrl } = req.body;
 
-        if (!shortUrl || !longUrl) {
-            return res.status(400).json({ error: "shortUrl y longUrl son requeridos" });
+        if (!longUrl) {
+            return res.status(400).json({ error: "longUrl es requerido" });
         }
 
-        const success = await createQuickUrl(shortUrl, longUrl);
+        const result = await createQuickUrl(longUrl);
 
-        if (success) {
-            return res.status(201).json({ message: "Quick URL creada con éxito" });
+        if (result.success) {
+            return res.status(201).json({ shortUrl: result.url, secretKey: result.secretKey });
         }
 
         return res.status(500).json({ error: "Error desconocido al crear la Quick URL" });

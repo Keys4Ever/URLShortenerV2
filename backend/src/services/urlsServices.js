@@ -52,7 +52,7 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
         await addUrlToUrlStats(rows[0].id, transaction);
         console.log("tags: ",tags);
         if (tags && tags.length > 0) {
-
+            console.log('lol tags')
             for (const tag of tags) {
                 try {
                     await addTagToUrl(rows[0].id, tag.id, transaction);
@@ -65,6 +65,7 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
         result.id = rows[0].id;
         result.success = true;
         await transaction.commit();
+        console.log(result);
         return result;
 
     } catch (error) {
