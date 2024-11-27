@@ -2,6 +2,7 @@ import { addTagToUrl } from "./tagsServices.js";
 import client from "../utils/turso.js";
 import {addUrlToUrlStats} from './urlStatServices.js'
 import { nanoid } from 'nanoid'
+import redisClient from "../config/redisConfig.js";
 
 export const createShortUrl = async (userId, longUrl, shortUrl, tags, description) => {
     const regex = /^[a-zA-Z0-9]+$/;
@@ -52,7 +53,6 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
         await addUrlToUrlStats(rows[0].id, transaction);
         console.log("tags: ",tags);
         if (tags && tags.length > 0) {
-            console.log('lol tags')
             for (const tag of tags) {
                 try {
                     await addTagToUrl(rows[0].id, tag.id, transaction);
@@ -76,7 +76,6 @@ export const createShortUrl = async (userId, longUrl, shortUrl, tags, descriptio
 };
 
 
-
 export const getOriginalUrl = async(shortUrl) =>{
     try {
         if(!shortUrl){
@@ -87,19 +86,26 @@ export const getOriginalUrl = async(shortUrl) =>{
             args:[shortUrl]
         });
 
-        if (rows.length === 0) {
+        if (rows.length == 0) {
             throw new Error("notfound");
         }
 
         const originalUrl = rows[0].original_url;
-        console.log("URL encontrada:", originalUrl);
-        return originalUrl;
+
+        const urlInRedis = {
+            original_url: originalUrl,
+            short_url: shortUrl
+        }
+
+        // Guardar item en redis para cachearlo uwu
+        await redisClient.set(shortUrl, JSON.stringify(urlInRedis));
+
+        return originalUrl
     } catch (error) {
         console.error("Error completo:", error);
         throw error;
     }
 }
-
 export const deleteUrl = async(shortUrl) =>{
     try {
         if(!shortUrl){
