@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Plus } from "lucide-react";
+import { addSecretToUser } from '../../services/quickShortServices';
 
 const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
     const [secret, setSecret] = useState('');
@@ -15,24 +16,40 @@ const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
             setRes({
                 error: true,
                 message: 'Please enter a secret'
-            })
+            });
             return;
         }
 
         try {
-            // TODO: Implement actual API call to add secret URL
-            // const response = await addSecretUrl(userId, secret);
-            // updateUrlsLocally(response);
-            console.log(secret)
+            // Enviar al backend
+            const response = await addSecretToUser(userId, secret);
+
+            if (response.error) {
+                throw new Error(response.error);
+            }
+
+            const newUrl = {
+                id: response.newUrl.id,
+                shortUrl: response.newUrl.shortUrl,
+                longUrl: response.newUrl.longUrl,
+                description: '',
+                tags:[]
+            }
+            // Actualizar localmente las URLs
+            updateUrlsLocally(newUrl);
+
             setSecret('');
             setRes({
                 error: false,
                 message: 'Secret added successfully'
             });
+
+            // Cerrar el modal después de agregar
+            setShowAddSecret(false);
         } catch (err) {
             setRes({
                 error: true,
-                message: 'Failed to add secret URL'
+                message: err.message || 'Failed to add secret URL'
             });
         }
     };
@@ -47,10 +64,7 @@ const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
                     <input
                         type="text"
                         value={secret}
-                        onChange={(e) => {
-                            setSecret(e.target.value);
-                            setError('');
-                        }}
+                        onChange={(e) => setSecret(e.target.value)}
                         placeholder="Enter secret URL"
                         className="w-full px-3 py-2 bg-transparent border-2 border-white focus:outline-none"
                     /> 

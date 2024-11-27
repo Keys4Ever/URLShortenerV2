@@ -44,6 +44,7 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
           setError(updateUrl.error);
           return;
         }
+        console.log(updatedUrl);
         updateUrlsLocally(updatedUrl, true);
       } else {
         const newUrl = await createShortUrl(userId, finalLongUrl, shortUrl, selectedTags, description);

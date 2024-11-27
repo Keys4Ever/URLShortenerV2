@@ -33,7 +33,7 @@ export const connectUrlToAccController = async (req, res) => {
         const result = await connectUrlToAcc(userId, secretKey);
 
         if (result.success) {
-            return res.status(200).json({ message: result.message });
+            return res.status(200).json({ message: result.message, newUrl: result.newUrl });
         }
 
         return res.status(500).json({ error: "Error desconocido al conectar la URL a la cuenta" });
