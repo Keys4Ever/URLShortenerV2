@@ -26,12 +26,12 @@ const createShortUrlController = async (req, res) => {
 const getOriginalUrlController = async (req, res) => {
     try {
         const { shortUrl } = req.params;
-        let originalUrl = getOriginalUrlFromRedis(shortUrl);
+        let originalUrl = await getOriginalUrlFromRedis(shortUrl);
 
         if(!originalUrl){
             originalUrl = await getOriginalUrl(shortUrl);
-
         }
+        console.log(originalUrl)
         return res.status(200).json({ originalUrl });
     } catch (error) {
         console.error("Error retrieving original URL:", error);
