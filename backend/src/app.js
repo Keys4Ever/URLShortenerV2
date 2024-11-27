@@ -15,6 +15,7 @@ import tagsRoutes from './routes/tagsRoutes.js'
 import quickUrlRoutes from './routes/quickUrlsRoutes.js'
 import { getOriginalUrl } from "./services/urlsServices.js";
 import { updateClicks } from "./services/urlStatServices.js";
+import responseTime from 'response-time';
 
 const app = express();
 const port = 3000;
@@ -37,6 +38,8 @@ app.use(authMiddleware);
 app.use(checkUserInDatabase);
 
 app.use(express.json());
+
+app.use(responseTime())
 
 app.get("/", (req, res) => {
     res.redirect('http://localhost:5173');

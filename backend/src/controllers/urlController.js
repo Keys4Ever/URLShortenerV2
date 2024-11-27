@@ -1,4 +1,5 @@
 import { addTagToUrl } from '../../../Frontend/src/services/tagServices.js';
+import { getOriginalUrlFromRedis } from '../services/redisServices.js';
 import { createShortUrl, getOriginalUrl, deleteUrl, updateUrl, getUserUrls, getAllFromUrl, alreadyExists } from '../services/urlsServices.js';
 
 // Controller para crear una short URL
@@ -25,8 +26,12 @@ const createShortUrlController = async (req, res) => {
 const getOriginalUrlController = async (req, res) => {
     try {
         const { shortUrl } = req.params;
-        const originalUrl = await getOriginalUrl(shortUrl);
+        let originalUrl = getOriginalUrlFromRedis(shortUrl);
 
+        if(!originalUrl){
+            originalUrl = await getOriginalUrl(shortUrl);
+
+        }
         return res.status(200).json({ originalUrl });
     } catch (error) {
         console.error("Error retrieving original URL:", error);
