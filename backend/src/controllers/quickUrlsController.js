@@ -11,7 +11,7 @@ export const createQuickUrlController = async (req, res) => {
         const result = await createQuickUrl(longUrl);
 
         if (result.success) {
-            return res.status(201).json({ shortUrl: result.url, secretKey: result.secretKey });
+            return res.status(201).json({ shortUrl: result.url, secretKey: result.secretKey, success: result.success });
         }
 
         return res.status(500).json({ error: "Error desconocido al crear la Quick URL" });

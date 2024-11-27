@@ -1,42 +1,39 @@
 import React, { useState } from 'react';
-import { Link as LinkIcon, ArrowRight, Copy, CheckCircle } from 'lucide-react';
-import SecretInput from './SecretInput.jsx';
 import { useAuth } from '../context/authContext.jsx';
 import { quickShort } from '../services/quickShortServices.js';
 import { createShortUrl } from '../services/urlServices.js';
+import UrlInputForm from './QuickShorten/UrlInputForm.jsx';
+import ShortUrlDisplay from './QuickShorten/ShortUrlDisplay.jsx';
+import SecretKeyDisplay from './QuickShorten/SecretKeyDisplay.jsx';
 
 const QuickShorten = () => {
   const { auth, loading } = useAuth();
-  const [url, setUrl] = useState('');
-  const [secretKey, setSecretKey] = useState(null)
   const [shortUrl, setShortUrl] = useState('');
+  const [secretKey, setSecretKey] = useState(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
 
-  const handleUrlChange = (e) => setUrl(e.target.value);
-
-  const handleShortenUrl = async (e) => {
-    e.preventDefault();
+  const handleShortenUrl = async (url) => {
     setError('');
     setShortUrl('');
     setIsLoading(true);
 
     try {
-      const response = !auth.authenticated ? await quickShort(url) : await createShortUrl(auth.user.sub.split('|')[1], url)
-      console.log(auth.user.sub.split('|')[1])
-      if (!response.success) {
-        throw new Error(response.error || 'Error shortening URL');
-      }
+      const userId = auth.authenticated ? auth.user.sub.split('|')[1] : null;
+      const response = userId
+        ? await createShortUrl(userId, url)
+        : await quickShort(url);
+      console.log(response);
+      if (!response.success) throw new Error(response.error || 'Error shortening URL');
 
       const generatedShortUrl = `keys.lat/${auth.authenticated ? response.url : response.shortUrl}`;
       setShortUrl(generatedShortUrl);
-      if(!auth.authenticated){
+
+      if (!auth.authenticated) {
         setSecretKey(response.secretKey);
       }
+
       await navigator.clipboard.writeText(generatedShortUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -53,53 +50,17 @@ const QuickShorten = () => {
           with our service.
         </h2>
 
-        <form className="space-y-6" onSubmit={handleShortenUrl}>
-          <div className="flex gap-4">
-            <input
-              type="url"
-              placeholder="Paste your long URL here..."
-              className="flex-1 px-4 py-3 bg-transparent border-2 border-white focus:outline-none focus:border-gray-400 transition"
-              onChange={handleUrlChange}
-              value={url}
-              disabled={isLoading}
-              required
-            />
-            <button
-              type="submit"
-              className="flex items-center px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition disabled:opacity-50"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Processing...' : 'Shorten'}
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </button>
-          </div>
-        </form>
-
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+        <UrlInputForm
+          isLoading={isLoading}
+          onShorten={handleShortenUrl}
+          error={error}
+        />
 
         {shortUrl && (
-          <div className="p-4 border-2 border-white mt-6">
-            <div className="flex items-center justify-between">
-              <span className="font-bold">{shortUrl}</span>
-              <div className="flex items-center gap-2">
-                {copied ? (
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                ) : (
-                  <Copy className="w-5 h-5" />
-                )}
-                <span className="text-sm">{copied ? 'Copied!' : 'Copy URL'}</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {!loading && shortUrl && secretKey && (
-          <div className="mt-6 p-4 border-2 border-white">
-            <p className="text-sm text-gray-300">
-              Secret key (use this to add the URL to your account):
-            </p>
-            <SecretInput secretKey={secretKey} />
-          </div>
+          <>
+            <ShortUrlDisplay shortUrl={shortUrl} />
+            {!loading && secretKey && <SecretKeyDisplay secretKey={secretKey} />}
+          </>
         )}
       </div>
     </section>

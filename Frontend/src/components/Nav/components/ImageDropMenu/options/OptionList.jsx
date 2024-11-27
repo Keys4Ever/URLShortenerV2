@@ -21,6 +21,7 @@ const OptionList = () => {
                 icon={<LogOut className="w-5 h-5 sm:w-6 sm:h-6" />} 
                 label="Logout" 
                 moveTo="http://localhost:3000/logout" 
+                isExternal
             />
         </ul>
     );
