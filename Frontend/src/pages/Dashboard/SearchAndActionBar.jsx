@@ -1,14 +1,14 @@
 import { Plus, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import AddUrlModal from "./AddUrlModal";
-import { getUserUrls } from "../../services/urlServices";
 import useUserUrls from "../../hooks/useUserUrls";
+import AddSecret from "./AddSecret";
 
 const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems, tagLoading }) => {
     const [searchBy, setSearchBy] = useState('short');
     const [showUrlForm, setShowUrlForm] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-
+    const [showAddSecret, setShowAddSecret] = useState(false);
     const originalUrls = useUserUrls(userId, setUrlItems)
 
     useEffect(() => {
@@ -50,6 +50,15 @@ const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems, tagL
                     tagLoading={tagLoading}
                 />
             )}
+            {showAddSecret && (
+                <AddSecret
+                    userId = {userId}
+                    updateUrlsLocally={updateUrlsLocally}
+                    setShowAddSecret={setShowAddSecret}
+                />
+            )
+
+            }
             <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -71,6 +80,15 @@ const SearchAndActionBar = ({ tags, userId, updateUrlsLocally, setUrlItems, tagL
                     </button>
                 </div>
             </div>
+
+            <button
+                className="px-6 py-2 bg-white text-black hover:bg-gray-200 transition flex items-center gap-2"
+                onClick={() => setShowAddSecret(true)}
+            >
+                <Plus className="w-5 h-5" />
+                Add URL with secret
+            </button>           
+
             <button
                 className="px-6 py-2 bg-white text-black hover:bg-gray-200 transition flex items-center gap-2"
                 onClick={() => setShowUrlForm(true)}

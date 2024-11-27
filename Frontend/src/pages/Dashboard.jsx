@@ -65,7 +65,7 @@ export default function Dashboard() {
           />
           <div className="space-y-2">
           {isLoadingTags ? <UrlCardSkeleton /> :
-            urlItems.map((item) => (
+            urlItems.length > 0 && urlItems.map((item) => (
               <UrlCard 
                 key={item.id} 
                 item={item} 
