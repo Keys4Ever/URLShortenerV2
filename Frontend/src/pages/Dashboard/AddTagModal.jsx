@@ -55,7 +55,14 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
     const handleAddForm = async (event) => {
         event.preventDefault();
         setShowAddForm(false);
-
+        if(tagName.length < 1){
+            alert("El nombre del tag no puede estar vacío");
+            return;
+        }
+        if(tagName.length > 20){
+            alert("El nombre del tag no puede tener más de 20 caracteres");
+            return;
+        }
         try {
             const response = await createTag(tagName, tagDescription, userId);
             const newTag = {
