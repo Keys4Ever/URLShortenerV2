@@ -2,7 +2,7 @@ const LogoCliqueable = () => {
     return (
         <a 
             href="https://keys.lat/" 
-            className="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse"
+            className="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse focus:outline-none"
         >
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -18,8 +18,7 @@ const LogoCliqueable = () => {
                 <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/>
             </svg>
             
-            {/* Texto responsivo que se ajusta en tamaño */}
-            <span className="self-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold whitespace-nowrap dark:text-white">
+             <span className="self-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold whitespace-nowrap dark:text-white">
                 KeysUrl
             </span>
         </a>

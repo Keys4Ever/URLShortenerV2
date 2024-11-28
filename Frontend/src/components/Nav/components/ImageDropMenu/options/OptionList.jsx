@@ -1,11 +1,8 @@
 import { useAuth } from '../../../../../context/authContext.jsx';
-import LogoutButton from '../../../../../components/LogoutButton.jsx';
 import { LayoutDashboard, LogOut } from 'lucide-react';
 import Option from './option.jsx';
 
-const OptionList = () => {
-    const { auth } = useAuth();
-    
+const OptionList = ({toggleDropdown, isMobile}) => {
     return (
         <ul 
             aria-labelledby="user-menu-button" 
@@ -13,14 +10,17 @@ const OptionList = () => {
         >
             <Option 
                 icon={<LayoutDashboard className="w-5 h-5 sm:w-6 sm:h-6" />} 
-                label="Dashboard" 
-                moveTo="/dashboard" 
+                label="Dashboard"
+                moveTo="/dashboard"
+                action={toggleDropdown}
                 hasBorder={true}
             />
             <Option
                 icon={<LogOut className="w-5 h-5 sm:w-6 sm:h-6" />} 
                 label="Logout" 
-                moveTo="http://localhost:3000/logout" 
+                className={isMobile ? 'border-b-2 border-white' : ''}
+                moveTo="http://localhost:3000/logout"
+                action={toggleDropdown}
                 isExternal
             />
         </ul>

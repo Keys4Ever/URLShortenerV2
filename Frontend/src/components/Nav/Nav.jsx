@@ -13,21 +13,24 @@ const Nav = () => {
 
     useEffect(() => {
         setUrl(location.pathname);
-        console.log(url);
     }, [location]);
 
     return (
         <nav className="sticky top-0 bg-white dark:bg-black border-b-2 border-black dark:border-white z-50 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between max-w-[932px] mx-auto p-4">
+            <div className="flex flex-wrap items-center justify-between px-4 py-3 max-w-[900px] mx-auto">
                 <LogoCliqueable />
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                     {url !== '/' ? (
-                        <ABtn label="Home" link="/" />
+                        <ABtn 
+                            label="Home" 
+                            link="/" 
+                            className="text-xs sm:text-sm"
+                        />
                     ) : (
                         <ABtn
                             link="https://keys4ever.dev"
                             label="Creator Info"
-                            className="text-xs sm:text-sm md:text-base lg:text-lg"
+                            className="text-xs sm:text-sm"
                             external
                         />
                     )}
