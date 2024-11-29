@@ -9,8 +9,22 @@
         margin: 0;
         padding: 0;
         overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: white black;
       }
 
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: black;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: white;
+      }
     </style>
     <title>Vite + React</title>
   </head>

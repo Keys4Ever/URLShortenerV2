@@ -16,17 +16,16 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
     // Filtrar URLs por etiquetas seleccionadas
     useEffect(() => {
         if (selectedTags.length === 0) {
-            setUrlItems(originalUrls); // Muestra todas las URLs si no hay etiquetas seleccionadas
+            setUrlItems(originalUrls);
         } else {
             const filteredUrls = originalUrls.filter((url) =>
-                url.tags.some((tag) => selectedTags.includes(tag.name)) // URLs que tienen alguna etiqueta seleccionada
+                url.tags.some((tag) => selectedTags.includes(tag.name))
             );
             setUrlItems(filteredUrls);
         }
     }, [selectedTags, originalUrls, setUrlItems]);
 
     const addTag = (newTag) => {
-        console.log(newTag);
         setTags((prevTags) => [...prevTags, newTag]);
     };
 
@@ -47,25 +46,35 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
                     {...(edit && { edit: true, tagId: tagIdToEdit })}
                 />
             )}
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div 
+                className="flex overflow-x-auto gap-2 mb-4 pb-2 scrollbar-thin scrollbar-thumb-white scrollbar-track-transparent"
+                style={{
+                    WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
+                    scrollbarWidth: 'thin', // Firefox smooth scrollbar
+                }}
+            >
                 {isLoading ? (
                     <>
                         <SkeletonTag bigTag />
                         <SkeletonTag bigTag />
                     </>
                 ) : tags.length === 0 ? (
-                    <p className="text-black dark:text-white">No tags found</p>
+                    <p className="text-white">No tags found</p>
                 ) : (
                     tags.map((tag) => (
-                        <Tag
-                            setTags={setTags}
-                            selectedTags={selectedTags}
-                            setSelectedTags={setSelectedTags}
-                            tag={tag}
-                            userId={userId}
-                            handleEditTag={handleEditTag}
-                            key={tag.id}
-                        />
+                        <div 
+                            key={tag.id} 
+                            className="flex-shrink-0" // Prevents tags from shrinking
+                        >
+                            <Tag
+                                setTags={setTags}
+                                selectedTags={selectedTags}
+                                setSelectedTags={setSelectedTags}
+                                tag={tag}
+                                userId={userId}
+                                handleEditTag={handleEditTag}
+                            />
+                        </div>
                     ))
                 )}
             </div>

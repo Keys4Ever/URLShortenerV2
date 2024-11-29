@@ -59,7 +59,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-[900px] mx-auto">
-        <main className="py-8">
+        <section className="py-8">
           <TagsSection tags={tags} setTags={setTags} isLoading={isLoadingTags} userId={userId} setUrlItems={setUrlItems}/>
           <SearchAndActionBar 
             tags={tags} 
@@ -82,7 +82,7 @@ export default function Dashboard() {
             ))
           }
           </div>
-        </main>
+        </section>
       </div>
     </div>
   );

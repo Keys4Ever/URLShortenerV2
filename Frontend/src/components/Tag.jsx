@@ -5,18 +5,15 @@ const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId, handleEditTa
     const handleDelete = async (id, userId) => {
         try {
             await deleteTag(userId, id);
-          // Actualiza el estado o realiza cualquier otra acción necesaria después de la eliminación
-            // Filtra las etiquetas eliminadas del estado de etiquetas
             setTags(prevTags => prevTags.filter(t => t.id !== id));
         } catch (error) {
-            // Manejo de errores, mostrar un mensaje de error
             console.error("Error al eliminar la etiqueta:", error);
             alert("No se pudo eliminar la etiqueta. Por favor, intenta de nuevo.");
         }
     };
 
     return (
-        <div key={tag.id} className="flex items-center gap-2 border border-white p-2">
+        <div className="flex items-center gap-2 border border-white p-2 whitespace-nowrap">
             <label className="flex items-center gap-2">
                 <input
                     type="checkbox"
@@ -34,14 +31,14 @@ const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId, handleEditTa
             </label>
             <div className="flex items-center gap-1">
                 <button
-                onClick={() => handleEditTag(tag.id)}
+                    onClick={() => handleEditTag(tag.id)}
                     className="p-1 hover:bg-white hover:text-black transition"
                 >
                     <Edit className="w-4 h-4" />
                 </button>
                 <button
                     className="p-1 hover:bg-white hover:text-black transition"
-                    onClick={() => handleDelete(tag.id, userId)} // Corrección aquí
+                    onClick={() => handleDelete(tag.id, userId)}
                 >
                     <X className="w-4 h-4" />
                 </button>
