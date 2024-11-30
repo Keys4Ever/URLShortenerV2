@@ -21,7 +21,6 @@ const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
         }
 
         try {
-            // Enviar al backend
             const response = await addSecretToUser(userId, secret);
 
             if (response.error) {
@@ -37,7 +36,6 @@ const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
                 clicks: response.newUrl.clicks,
                 date: response.newUrl.date
             }
-            // Actualizar localmente las URLs
             updateUrlsLocally(newUrl);
 
             setSecret('');
@@ -46,7 +44,6 @@ const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
                 message: 'Secret added successfully'
             });
 
-            // Cerrar el modal después de agregar
             setShowAddSecret(false);
         } catch (err) {
             setRes({

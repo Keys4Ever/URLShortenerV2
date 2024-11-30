@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import { getUserUrls } from '../services/urlServices';
 import { getAllTags } from '../services/tagServices';
@@ -9,10 +10,19 @@ import UrlCardSkeleton from '../components/UrlCardSkeleton';
 export default function Dashboard() {
   const { auth, loading } = useAuth();
   const userId = auth.user ? auth.user.sub.split('|')[1] : null;
-
+  const navigate = useNavigate();
   const [urlItems, setUrlItems] = useState([]);
   const [tags, setTags] = useState([]);
   const [isLoadingTags, setIsLoadingTags] = useState(true);
+
+
+  useEffect(() => {
+    if(loading)return;
+
+    if(!auth.authenticated){
+      navigate('/');
+    }
+  },[loading, auth.authenticated])
 
   const updateUrlsLocally = async (newUrl, isEditing = false) => {
     if (newUrl.shortUrl) {

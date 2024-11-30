@@ -43,7 +43,6 @@ export const createQuickUrl = async(longUrl) => {
 export const connectUrlToAcc = async (userId, secretKey) => {
     const transaction = await client.transaction("write");
     try {
-        // Obtener la URL con toda la información en una sola consulta
         const urlResult = await transaction.execute({
             sql: `
                 SELECT 
