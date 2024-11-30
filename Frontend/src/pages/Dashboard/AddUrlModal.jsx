@@ -92,9 +92,9 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
   }, [edit, item]);
 
   const handleShortUrlChange = (e) => {
-    const value = e.target.value.replace('https://keys.lat/', '');
-    setShortUrl(value);
-    setError(''); // Clear error when user starts typing
+    const inputValue = e.target.value.replace('https://keys.lat/', '').trim();
+    setShortUrl(inputValue);
+    setError('');
   };
 
   const handleTagSelection = (tagId, tagName) => {
@@ -136,7 +136,7 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
             <label className="block mb-2">Short URL</label>
             <input
               type="text"
-              value={`https://keys.lat/${shortUrl}`}
+              value={shortUrl ? `https://keys.lat/${shortUrl}` : ''}
               onChange={handleShortUrlChange}
               placeholder="Leave blank for random"
               className={`w-full p-2 bg-black border-2 ${error ? 'border-red-500' : 'border-white'}`}
