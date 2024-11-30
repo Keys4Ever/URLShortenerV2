@@ -3,13 +3,6 @@ Second version of my URL Shortener. This one will have a frontend with React, an
 
 
 
-## TO-DO
-- [x] Quick shorten en el home
-- [ ] Forma de agregar un quickshortened a tu perfil (Con botón de confirmar y un secret censurado, guardar en bdd)
-### Settings
-- [ ] Cambiar foto
-
-
 ### Refactors
 - [ ] Cambiar base de datos a postgresql o mongodb
 - [ ] Arquitectura frontend: Screaming arq
