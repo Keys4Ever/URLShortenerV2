@@ -13,7 +13,7 @@ const UrlInputForm = ({ isLoading, onShorten, error }) => {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="flex gap-4">
+      <div className="flex items-center gap-4">
         <input
           type="url"
           placeholder="Paste your long URL here..."
@@ -25,11 +25,13 @@ const UrlInputForm = ({ isLoading, onShorten, error }) => {
         />
         <button
           type="submit"
-          className="flex items-center px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition disabled:opacity-50"
+          className="flex items-center px-4 sm:px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition"
           disabled={isLoading}
         >
-          {isLoading ? 'Processing...' : 'Shorten'}
-          <ArrowRight className="w-5 h-5 ml-2" />
+          <span className="hidden sm:inline">
+            {isLoading ? 'Processing...' : 'Shorten'}
+          </span>
+          <ArrowRight className="w-5 h-5" />
         </button>
       </div>
       {error && <p className="text-red-500 mt-4">{error}</p>}

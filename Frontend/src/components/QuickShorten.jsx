@@ -44,11 +44,12 @@ const QuickShorten = () => {
   return (
     <section className="max-w-5xl mx-auto px-4 py-10 flex items-center">
       <div className="border-4 border-white p-8 text-left w-full mb-6">
-        <h2 className="text-4xl font-bold mb-6">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-5 md:mb-6">
           Shorten your URL quickly and easily
           <br />
           with our service.
         </h2>
+
 
         <UrlInputForm
           isLoading={isLoading}
