@@ -33,7 +33,9 @@ const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
                 shortUrl: response.newUrl.shortUrl,
                 longUrl: response.newUrl.longUrl,
                 description: '',
-                tags:[]
+                tags:[],
+                clicks: response.newUrl.clicks,
+                date: response.newUrl.date
             }
             // Actualizar localmente las URLs
             updateUrlsLocally(newUrl);

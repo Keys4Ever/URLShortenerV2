@@ -14,12 +14,11 @@ export default function Dashboard() {
   const [tags, setTags] = useState([]);
   const [isLoadingTags, setIsLoadingTags] = useState(true);
 
-  // Función para actualizar URLs localmente
   const updateUrlsLocally = async (newUrl, isEditing = false) => {
     if (newUrl.shortUrl) {
         setUrlItems(prevUrls => {
             const urls = Array.isArray(prevUrls) ? prevUrls : [];
-            
+            console.log(prevUrls)
             if (isEditing) {
                 return urls.map(url => url.id === newUrl.id ? newUrl : url);
             }
@@ -27,12 +26,12 @@ export default function Dashboard() {
             return [...urls, newUrl];
         });
     } else {
-        // Si no hay newUrl.shortUrl, obtener todas las URLs del usuario
         setUrlItems(await getUserUrls(userId));
     }
+
+    console.log(newUrl);
 };
 
-  // Función para eliminar URLs localmente
   const deleteUrlLocally = (urlId) => {
     setUrlItems(prevUrls => prevUrls.filter(url => url.id !== urlId));
   };
