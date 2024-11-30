@@ -61,7 +61,7 @@ const LookURLSection = () => {
                             className="flex items-center px-4 sm:px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition"
                         >
                             <span className="hidden sm:inline">Check URL</span>
-                            <ArrowRight className="w-5 h-5" />
+                            <ArrowRight className="w-5 h-5 sm:ml-2" />
                         </button>
                     </div>
                 </form>

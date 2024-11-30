@@ -31,7 +31,7 @@ const UrlInputForm = ({ isLoading, onShorten, error }) => {
           <span className="hidden sm:inline">
             {isLoading ? 'Processing...' : 'Shorten'}
           </span>
-          <ArrowRight className="w-5 h-5" />
+          <ArrowRight className="w-5 h-5 sm:ml-2" />
         </button>
       </div>
       {error && <p className="text-red-500 mt-4">{error}</p>}
