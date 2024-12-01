@@ -18,10 +18,6 @@ const createShortUrlController = async (req: Request, res: Response) => {
     try {
         const result = await url.createShortUrl({ userId, longUrl, shortUrl, tags, description });
 
-        if (result.error) {
-            return res.status(400).json({ error: result.error });
-        }
-
         return res.status(201).json(result);
     } catch (error) {
         console.error("Error creating short URL:", error);

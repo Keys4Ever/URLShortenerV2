@@ -6,7 +6,6 @@ interface createResult {
     url: string;
     success?: boolean;
     id?: string;
-    error?: string;
 }
 
 class Url {
