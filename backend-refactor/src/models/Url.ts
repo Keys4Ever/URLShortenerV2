@@ -1,12 +1,12 @@
 import { CreateUrl } from "../types/UrlTypes";
 import databaseClient from "../utils/DatabaseClient";
 import { nanoid } from "nanoid";
+import redisClient from "../config/redisConfig.ts";
 
 interface createResult {
     url: string;
-    success?: boolean;
     id?: string;
-}
+    }
 
 class Url {
     
@@ -68,13 +68,56 @@ class Url {
             });
 
             result.id = newUrl;
-            result.success = true;
             return result;
         } catch (error) {
             console.error("Error creando short URL:", error);
             throw error;
         }
     }
+
+    async getOriginalUrl(shortUrl: string): Promise<string>{
+        if(!shortUrl){
+            throw new Error("No url");
+        }
+
+        const { rows } = await databaseClient.execute("SELECT original_url FROM urls WHERE short_url = $1", [shortUrl]);
+
+        if (rows.length == 0) {
+            throw new Error("notfound");
+        }
+
+        const originalUrl = rows[0].original_url;
+
+        const urlInRedis = {
+            original_url: originalUrl,
+            short_url: shortUrl
+        }
+        
+        // Guardar item en redis para cachearlo uwu
+        await redisClient.set(shortUrl, JSON.stringify(urlInRedis));
+
+        return originalUrl;
+    }
+    async delete(shortUrl: string): Promise<void> {
+        try {
+            await databaseClient.transaction(async (client) => {
+                const result = await client.query(
+                    "DELETE FROM urls WHERE short_url = $1",
+                    [shortUrl]
+                );
+
+                if (result.rowCount === 0) {
+                    throw new Error("No short URL found to delete");
+                }
+
+                console.log("Short URL deleted successfully:", shortUrl);
+            });
+        } catch (error) {
+            console.error("Error in delete method:", error.message);
+            throw error;
+        }
+    }
+
 
 }
 // Funciones auxiliares
