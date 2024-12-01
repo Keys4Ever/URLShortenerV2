@@ -1,4 +1,4 @@
-import { Pool, PoolClient } from 'pg';
+import { Pool, PoolClient, QueryResult } from 'pg';
 import { poolConfig } from '../config/poolConfig';
 
 class DatabaseClient{
@@ -8,12 +8,12 @@ class DatabaseClient{
         this.pool = new Pool(poolConfig);
     }
 
-    async execute<T = any>(query: string, params?: any[]): Promise<T> {
+    async execute<T = any>(query: string, params?: any[]): Promise<QueryResult> {
         const client = await this.pool.connect();
         try {
             const result = await client.query(query, params);
             client.release();
-            return result.rows[0];
+            return result;
         } catch (error) {
             client.release();
             throw error;

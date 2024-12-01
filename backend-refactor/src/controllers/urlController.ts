@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import Url from "../models/Url";
+import url from "../models/Url";
 import Redis from "../models/Redis";
 
 const createShortUrlController = async (req: Request, res: Response) => {
-    const url = new Url();
     const { userId, longUrl, tags, description, shortUrl } = req.body;
     
     if (!userId) {
@@ -30,7 +29,6 @@ const createShortUrlController = async (req: Request, res: Response) => {
 
 const getOriginalUrlController = async (req: Request, res: Response) => {
     const { shortUrl } = req.params;
-    const url = new Url();
     const redis = new Redis();
 
     let originalUrl: string | null;
@@ -50,7 +48,6 @@ const getOriginalUrlController = async (req: Request, res: Response) => {
 
 const deleteUrlController = async (req: Request, res: Response) => {
     const { shortUrl } = req.params;
-    const url = new Url();
     
         if(!shortUrl){
             return res.status(400).json({ error: "Short URL is required" });
@@ -60,4 +57,63 @@ const deleteUrlController = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "URL deleted successfully" });
 };
 
-export { createShortUrlController, getOriginalUrlController, deleteUrlController };
+const getAllFromUrlController = async (req: Request, res: Response) => {
+    const { shortUrl } = req.params;
+    
+    if(!shortUrl){
+        return res.status(400).json({ error: "Short URL is required" });
+    }
+
+    try {
+        const urls = await url.getAllFromUrl(shortUrl);
+
+        if(urls.length == 0){
+            return res.status(404).json({ error: "URL not found" });
+        }
+        return res.status(200).json(urls);
+    } catch (error) {
+        console.error("Error retrieving URL details:", error);
+        return res.status(500).json({ error: "Error retrieving URL details" });
+    }
+  
+};
+
+const getUserUrlsController = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    
+    if(!userId){
+        return res.status(400).json({ error: "User ID is required" });
+    }
+
+    try {
+        const urls = await url.getUserUrls(userId);
+
+        if(urls.length == 0){
+            return res.status(404).json({ error: "User doesn't have any URLs or the user doesn't exist" });
+        }
+        return res.status(200).json(urls);
+    } catch (error) {
+        console.error("Error retrieving user URLs:", error);
+        return res.status(500).json({ error: "Error retrieving user URLs" });
+    }
+};
+
+const updateUrlController = async (req: Request, res: Response) => {
+    const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags } = req.body;
+
+    try {
+        const result = await url.updateUrl({ currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags });
+     
+        if (result.error) {
+            throw new Error(result.error);
+        }  
+
+        return res.status(200).json({ message: "URL updated successfully" });    
+    } catch (error) {
+        console.error("Error updating URL:", error);
+        return res.status(500).json({ error: "Error updating URL" });
+    }
+
+};
+
+export { createShortUrlController, getOriginalUrlController, deleteUrlController, getAllFromUrlController, updateUrlController };

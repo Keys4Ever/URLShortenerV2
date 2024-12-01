@@ -1,3 +1,5 @@
+import { PoolClient } from "pg";
+
 export interface User {
     userId: string;
     email: string;
@@ -10,6 +12,59 @@ export interface Url {
     shortUrl: string;
     tags: Array<{ id: string; name: string; description: string }>;
     description: string;
+}
+
+export interface currentUrl extends Url {
+    id: string | number;
+    clicks: number;
+    date: string;
+}
+export interface Tag {
+    id: string;
+    name: string;
+    description: string;
+}
+
+export interface UpdateUrlInput {
+    currentShortUrl: string;
+    currentLongUrl: string;
+    newShortUrl?: string;
+    newLongUrl?: string;
+    tags?: Tag[];
+    currentTags?: Tag[];
+}
+
+export type UpdateParams = {
+    currentLongUrl: string;
+    newLongUrl?: string;
+    currentShortUrl: string;
+    newShortUrl?: string;
+    tags?: Tag[];
+    currentTags?: Tag[];
+};
+
+export type BuildUpdateQueryParams = {
+    currentShortUrl: string;
+    currentLongUrl: string;
+    newShortUrl?: string;
+    newLongUrl?: string;
+};
+
+export type TagComparisonParams = {
+    tags?: Tag[];
+    currentTags?: Tag[];
+};
+
+export type HandleTagsParams = {
+    client: PoolClient;
+    addedTags: Tag[];
+    removedTags: Tag[];
+    url: string;
+};
+
+export interface UpdateResponse {
+    message?: string;
+    error?: string;
 }
 
 export type CreateUrl = Pick<User, "userId"> & Url;
