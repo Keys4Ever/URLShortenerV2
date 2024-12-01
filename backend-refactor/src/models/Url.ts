@@ -7,6 +7,7 @@ interface createResult {
     url: string;
     id?: string;
     }
+}
 
 class Url {
     
