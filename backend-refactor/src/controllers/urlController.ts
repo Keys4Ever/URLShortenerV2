@@ -105,7 +105,7 @@ const updateUrlController = async (req: Request, res: Response) => {
         const result = await url.updateUrl({ currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags });
      
         if (result.error) {
-            throw new Error(result.error);
+            throw new Error("Error updating URL");
         }  
 
         return res.status(200).json({ message: "URL updated successfully" });    

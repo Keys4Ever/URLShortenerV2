@@ -2,7 +2,7 @@ import { BuildUpdateQueryParams, CreateUrl, currentUrl, HandleTagsParams, Tag, T
 import databaseClient from "../utils/DatabaseClient";
 import { nanoid } from "nanoid";
 import redisClient from "../config/redisConfig.ts";
-import { PoolClient } from "pg";
+import stats from "./Stats.ts";
 
 interface createResult {
     url: string;
@@ -52,13 +52,13 @@ class Url {
 
                 const urlId = rows[0].id;
 
-                // Implementar luego cuando se haga el stats class y tags class
+                stats.initializeUrlStats({urlId, client});
+                // Implementar luego cuando se haga el tags class
                 /*
-                await this.addUrlToUrlStats(urlId, client);
                 if (tags && tags.length > 0) {
                     for (const tag of tags) {
                         try {
-                            await this.addTagToUrl(urlId, tag.id, client);
+                            await tags.addTagToUrl(urlId, tag.id, client);
                         } catch (error) {
                             console.error(`Error al añadir tag ${tag.id} a la URL ${urlId}:`, error);
                         }
