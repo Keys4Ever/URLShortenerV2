@@ -7,18 +7,12 @@ class Redis {
                 return null;
             }
 
-            let parsedResponse: { original_url?: string } | null;
-            try {
-                parsedResponse = JSON.parse(response);
-            } catch (error) {
-                parsedResponse = null;
-            }
-
-            return parsedResponse?.original_url ?? null;
+            return response;
         } catch (error) {
             throw error;
         }
     }
 }
 
-export default Redis;
+const redis = new Redis();
+export default redis;

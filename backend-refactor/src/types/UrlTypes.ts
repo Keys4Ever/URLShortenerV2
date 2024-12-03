@@ -10,15 +10,16 @@ export interface User {
 export interface Url {
     longUrl: string;
     shortUrl: string;
-    tags: Array<{ id: string; name: string; description: string }>;
+    urlTags: Array<{ id: string; name: string; description: string }>;
     description: string;
 }
-
-export interface currentUrl extends Url {
+export interface currentUrl extends Omit<Url, 'urlTags'> {
     id: string | number;
     clicks: number;
     date: string;
+    tags: Array<{ id: string; name: string; description: string }>;
 }
+
 export interface Tag {
     id: string;
     name: string;

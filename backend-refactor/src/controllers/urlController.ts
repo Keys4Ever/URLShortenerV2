@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import url from "../models/Url";
-import Redis from "../models/Redis";
+import redis from "../models/Redis";
 
 const createShortUrlController = async (req: Request, res: Response) => {
     const { userId, longUrl, tags, description, shortUrl } = req.body;
@@ -15,7 +15,7 @@ const createShortUrlController = async (req: Request, res: Response) => {
 
 
     try {
-        const result = await url.createShortUrl({ userId, longUrl, shortUrl, tags, description });
+        const result = await url.createShortUrl({ userId, longUrl, shortUrl, urlTags: tags, description });
 
         return res.status(201).json(result);
     } catch (error) {
@@ -29,7 +29,6 @@ const createShortUrlController = async (req: Request, res: Response) => {
 
 const getOriginalUrlController = async (req: Request, res: Response) => {
     const { shortUrl } = req.params;
-    const redis = new Redis();
 
     let originalUrl: string | null;
 

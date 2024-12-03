@@ -3,6 +3,7 @@ import databaseClient from "../utils/DatabaseClient";
 import { nanoid } from "nanoid";
 import redisClient from "../config/redisConfig.ts";
 import stats from "./Stats.ts";
+import tag from "./Tags.ts";
 
 interface createResult {
     url: string;
@@ -14,7 +15,7 @@ class Url {
     
     async createShortUrl(input: CreateUrl): Promise<createResult> {
         const regex = /^[a-zA-Z0-9]+$/;
-        let { userId, longUrl, shortUrl, description } = input;
+        let { userId, longUrl, shortUrl, description, urlTags } = input;
 
         if (shortUrl && !regex.test(shortUrl)) {
             throw new Error("Invalid short URL");
@@ -54,17 +55,17 @@ class Url {
 
                 stats.initializeUrlStats({urlId, client});
                 // Implementar luego cuando se haga el tags class
-                /*
-                if (tags && tags.length > 0) {
-                    for (const tag of tags) {
+                
+                if (urlTags && urlTags.length > 0) { 
+                    for (const urlTag of urlTags) { 
                         try {
-                            await tags.addTagToUrl(urlId, tag.id, client);
+                            await tag.addToUrl({urlId, tagId: urlTag.id, client});
                         } catch (error) {
-                            console.error(`Error al añadir tag ${tag.id} a la URL ${urlId}:`, error);
+                            console.error(`Error al añadir tag ${urlTag.id} a la URL ${urlId}:`, error);
                         }
                     }
                 }
-                */
+                
 
                 return urlId;
             });
@@ -245,6 +246,8 @@ class Url {
     }
 
 }
+
+
 // Funciones auxiliares
 async function alreadyExists(shortUrl: string): Promise<boolean> {
     console.log(`Verificando si ya existe la shortUrl: ${shortUrl}`);
