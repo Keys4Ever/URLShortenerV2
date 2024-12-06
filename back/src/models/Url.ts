@@ -1,5 +1,5 @@
-import { BuildUpdateQueryParams, CreateUrl, currentUrl, HandleTagsParams, Tag, TagComparisonParams, UpdateParams, UpdateResponse, UpdateUrlInput } from "../types/UrlTypes";
-import databaseClient from "../utils/DatabaseClient";
+import { BuildUpdateQueryParams, CreateUrl, currentUrl, HandleTagsParams, Tag, TagComparisonParams, UpdateParams, UpdateResponse, UpdateUrlInput } from "../types/UrlTypes.ts";
+import databaseClient from "../utils/DatabaseClient.ts";
 import { nanoid } from "nanoid";
 import redisClient from "../config/redisConfig.ts";
 import stats from "./Stats.ts";
@@ -119,7 +119,7 @@ class Url {
                 console.log("Short URL deleted successfully:", shortUrl);
             });
         } catch (error) {
-            console.error("Error in delete method:", error.message);
+            console.error("Error in delete method:", error);
             throw error;
         }
     }
@@ -169,7 +169,7 @@ class Url {
             const urls: currentUrl[] = [];
             let currentUrl: currentUrl | null = null;
 
-            rows.forEach(row => {
+            rows.forEach((row: any) => {
                 if (!currentUrl || currentUrl.id !== row.url_id) {
                     if (currentUrl) urls.push(currentUrl);
 
