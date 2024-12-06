@@ -123,3 +123,7 @@ class Quick {
     }
     
 }
+
+
+const quick = new Quick();
+export default quick;
