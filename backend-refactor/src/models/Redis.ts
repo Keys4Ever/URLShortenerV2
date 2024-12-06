@@ -1,4 +1,5 @@
 import redisClient from "../config/redisConfig.ts";
+import stats from "./Stats.ts";
 class Redis {
     async getOriginalUrl(shortUrl: string): Promise<string | null> {
         try {
@@ -6,6 +7,8 @@ class Redis {
             if (!response) {
                 return null;
             }
+
+            stats.updateClicks(shortUrl);
 
             return response;
         } catch (error) {

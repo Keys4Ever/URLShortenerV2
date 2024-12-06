@@ -100,6 +100,8 @@ class Url {
         // Guardar item en redis para cachearlo uwu
         await redisClient.set(shortUrl, JSON.stringify(urlInRedis));
 
+        stats.updateClicks(shortUrl);
+
         return originalUrl;
     }
     async delete(shortUrl: string): Promise<void> {
