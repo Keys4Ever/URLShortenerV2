@@ -14,17 +14,16 @@ interface createResult {
 class Url {
     
     async createShortUrl(input: CreateUrl): Promise<createResult> {
-        const regex = /^[a-zA-Z0-9]+$/;
         let { userId, longUrl, shortUrl, description, urlTags } = input;
 
-        if (shortUrl && !regex.test(shortUrl)) {
-            throw new Error("Invalid short URL");
+        if (shortUrl && !isValidUrl(shortUrl)) {
+            throw new Error("Invalid short URL format");
         }
 
         if (!shortUrl) {
             do {
                 shortUrl = nanoid(6);
-            } while (await alreadyExists(shortUrl));
+        } while (await alreadyExists(shortUrl) && !isValidUrl(shortUrl));
         }
 
         const result: createResult = {
@@ -80,6 +79,11 @@ class Url {
 
     async getOriginalUrl(shortUrl: string): Promise<string>{
 
+
+        if (!isValidUrl(shortUrl)) {
+            throw new Error("Invalid short URL format");
+        } 
+
         const { rows } = await databaseClient.execute("SELECT original_url FROM urls WHERE short_url = $1", [shortUrl]);
 
         if (rows.length == 0) {
@@ -119,10 +123,12 @@ class Url {
     }
 
     async getAllFromUrl(shortUrl: string): Promise<Url[]> {
+
+        if (!isValidUrl(shortUrl)) {
+            throw new Error("Invalid short URL format");
+        }
+
         try {
-            if(!shortUrl){
-                throw new Error("Falta la URL");
-            }
             const { rows } = await databaseClient.execute(
                 "SELECT * FROM urls WHERE short_url = $1",
                 [shortUrl]
@@ -195,7 +201,7 @@ class Url {
 
     public async updateUrl(input: UpdateUrlInput): Promise<UpdateResponse> {
         const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags } = input;
-    
+        
         const updateParams: UpdateParams = {
             currentLongUrl,
             newLongUrl,
@@ -361,6 +367,11 @@ async function handleTags(params: HandleTagsParams): Promise<void> {
             [urlId, tag.id]
         );
     }
+}
+
+function isValidUrl(url: string): boolean {
+    const regex = /^[a-zA-Z0-9\-]+$/;
+    return regex.test(url);
 }
 const url = new Url();
 

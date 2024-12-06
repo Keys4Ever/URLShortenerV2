@@ -57,7 +57,6 @@ export const connectUrlToAcc = async (userId, secretKey) => {
             `,
             args: [secretKey]
         });
-
         if (urlResult.rows.length === 0) {
             throw new Error('No existe la secret');
         }
