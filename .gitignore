@@ -131,3 +131,6 @@ dist
 
 # Personal preferences
 *.sql
+
+# Build
+build/

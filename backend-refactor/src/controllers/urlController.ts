@@ -20,9 +20,6 @@ const createShortUrlController = async (req: Request, res: Response) => {
         return res.status(201).json(result);
     } catch (error) {
         console.error("Error creating short URL:", error);
-        if(error.message === "Invalid short URL"){
-            return res.status(406).json({ error: "Invalid short URL" });
-        }
         return res.status(500).json({ error: "Error creating short URL" });
     }
 };
@@ -115,4 +112,4 @@ const updateUrlController = async (req: Request, res: Response) => {
 
 };
 
-export { createShortUrlController, getOriginalUrlController, deleteUrlController, getAllFromUrlController, updateUrlController };
+export { createShortUrlController, getUserUrlsController , getOriginalUrlController, deleteUrlController, getAllFromUrlController, updateUrlController }; 

@@ -18,9 +18,6 @@ const createTagController = async (req: Request, res: Response) => {
         return res.status(201).json(result);
     } catch (error) {
         console.error("Error creating tag:", error);
-        if(error.message === "Failed to add tag"){
-            return res.status(409).json({ error: "Tag already exists" });
-        }
         return res.status(500).json({ error: "Error creating tag" });
     }
 };

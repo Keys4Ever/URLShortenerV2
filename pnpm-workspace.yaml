@@ -1,3 +1,4 @@
 packages:
   - 'backend'
+  - 'backend-refactor'
   - 'frontend'

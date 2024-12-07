@@ -8,7 +8,7 @@ class DatabaseClient{
         this.pool = new Pool(poolConfig);
     }
 
-    async execute<T = any>(query: string, params?: any[]): Promise<QueryResult> {
+    async execute(query: string, params?: any[]): Promise<QueryResult> {
         const client = await this.pool.connect();
         try {
             const result = await client.query(query, params);

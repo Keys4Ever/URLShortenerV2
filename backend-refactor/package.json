@@ -1,26 +1,31 @@
 {
-  "name": "back",
-  "private": true,
-  "version": "0.0.0",
+  "name": "backend-refactor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "tsc": "tsc",
+    "start": "node dist/src/server.js",
+    "dev": "ts-node-dev src/server.ts",
+    "build": "tsc"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/pg": "^8.11.10",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
     "@typescript-eslint/parser": "^8.16.0",
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.4.1",
-    "typescript": "~5.6.2",
-    "vite": "^6.0.1"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@types/pg": "^8.11.10",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",

@@ -22,9 +22,6 @@ const createQuickUrlController = async (req: Request, res: Response) => {
         return res.status(201).json(result);
     } catch (error) {
         console.error("Error creating quick url:", error);
-        if(error.message === "Invalid short URL"){
-            return res.status(406).json({ error: "Invalid short URL" });
-        }
         return res.status(500).json({ error: "Error creating quick url" });
     }
 };
@@ -50,9 +47,6 @@ const connectQuickUrlController = async (req: Request, res: Response) => {
         return res.status(200).json(result);
     } catch (error) {
         console.error("Error connecting quick url:", error);
-        if(error.message === "Invalid short URL"){
-            return res.status(406).json({ error: "Invalid short URL" });
-        }
         return res.status(500).json({ error: "Error connecting quick url" });
     }
 };

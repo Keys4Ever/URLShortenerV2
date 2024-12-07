@@ -1,9 +1,9 @@
-import { BuildUpdateQueryParams, CreateUrl, currentUrl, HandleTagsParams, Tag, TagComparisonParams, UpdateParams, UpdateResponse, UpdateUrlInput } from "../types/UrlTypes.ts";
-import databaseClient from "../utils/DatabaseClient.ts";
+import { BuildUpdateQueryParams, CreateUrl, currentUrl, HandleTagsParams, Tag, TagComparisonParams, UpdateParams, UpdateResponse, UpdateUrlInput } from "../types/UrlTypes";
+import databaseClient from "../utils/DatabaseClient";
 import { nanoid } from "nanoid";
-import redisClient from "../config/redisConfig.ts";
-import stats from "./Stats.ts";
-import tag from "./Tags.ts";
+import redisClient from "../config/redisConfig";
+import stats from "./Stats";
+import tag from "./Tags";
 
 interface createResult {
     url: string;
