@@ -3,8 +3,8 @@ import url from "../models/Url";
 import redis from "../models/Redis";
 
 
-class urlController{
-    async create(req: Request, res: Response){
+export class urlController{
+    static async create(req: Request, res: Response){
         const { userId, longUrl, tags, description, shortUrl } = req.body;
         
         if (!userId) {
@@ -26,7 +26,7 @@ class urlController{
         }
     }
 
-    async getOriginalUrl(req: Request, res: Response){
+    static async getOriginalUrl(req: Request, res: Response){
         const { shortUrl } = req.params;
     
         let originalUrl: string | null;
@@ -44,7 +44,7 @@ class urlController{
         return res.status(200).json({ originalUrl });
     }
     
-    async delete(req: Request, res: Response){
+    static async delete(req: Request, res: Response){
         const { shortUrl } = req.params;
         
             if(!shortUrl){
@@ -55,7 +55,7 @@ class urlController{
         return res.status(200).json({ message: "URL deleted successfully" });
     }
     
-    async getAllFromUrl(req: Request, res: Response){
+    static async getAllFromUrl(req: Request, res: Response){
         const { shortUrl } = req.params;
         
         if(!shortUrl){
@@ -76,7 +76,7 @@ class urlController{
       
     }
   
-    async getUserUrls(req: Request, res: Response){
+    static async getUserUrls(req: Request, res: Response){
         const { userId } = req.params;
         
         if(!userId){
@@ -96,7 +96,7 @@ class urlController{
         }
     }
 
-    async updateUrl(req: Request, res: Response){
+    static async updateUrl(req: Request, res: Response){
         const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags } = req.body;
     
         try {
@@ -113,6 +113,3 @@ class urlController{
         }
     }
 }
-
-const urlsController = new urlController();
-export default urlsController;
