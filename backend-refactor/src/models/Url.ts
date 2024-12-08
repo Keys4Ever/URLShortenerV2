@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import redisClient from "../config/redisConfig";
 import stats from "./Stats";
 import tag from "./Tags";
+import { isValidShortUrl } from "../utils/isValidShortUrl";
 
 interface createResult {
     url: string;
@@ -16,14 +17,14 @@ class Url {
     async createShortUrl(input: CreateUrl): Promise<createResult> {
         let { userId, longUrl, shortUrl, description, urlTags } = input;
 
-        if (shortUrl && !isValidUrl(shortUrl)) {
+        if (shortUrl && !isValidShortUrl(shortUrl)) {
             throw new Error("Invalid short URL format");
         }
 
         if (!shortUrl) {
             do {
                 shortUrl = nanoid(6);
-        } while (await alreadyExists(shortUrl) && !isValidUrl(shortUrl));
+        } while (await alreadyExists(shortUrl) && !isValidShortUrl(shortUrl));
         }
 
         const result: createResult = {
@@ -80,7 +81,7 @@ class Url {
     async getOriginalUrl(shortUrl: string): Promise<string>{
 
 
-        if (!isValidUrl(shortUrl)) {
+        if (!isValidShortUrl(shortUrl)) {
             throw new Error("Invalid short URL format");
         } 
 
@@ -126,7 +127,7 @@ class Url {
 
     async getAllFromUrl(shortUrl: string): Promise<Url[]> {
 
-        if (!isValidUrl(shortUrl)) {
+        if (!isValidShortUrl(shortUrl)) {
             throw new Error("Invalid short URL format");
         }
 
@@ -369,11 +370,6 @@ async function handleTags(params: HandleTagsParams): Promise<void> {
             [urlId, tag.id]
         );
     }
-}
-
-function isValidUrl(url: string): boolean {
-    const regex = /^[a-zA-Z0-9\-]+$/;
-    return regex.test(url);
 }
 const url = new Url();
 

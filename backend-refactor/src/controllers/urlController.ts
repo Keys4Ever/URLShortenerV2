@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 import url from "../models/Url";
 import redis from "../models/Redis";
 

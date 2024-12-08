@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import quick from "../models/Quick";
 
 
-class quickControllers{
-    async create(req: Request, res: Response){
+export class quickControllers{
+    static async create(req: Request, res: Response){
         const { userId, longUrl } = req.body;
         
         if(!userId){
@@ -28,7 +28,7 @@ class quickControllers{
         }
     }
 
-    async connect(req: Request, res: Response){
+    static async connect(req: Request, res: Response){
         const { userId, secretKey } = req.body;
         
         if(!userId){
@@ -53,6 +53,3 @@ class quickControllers{
         }
     }  
 }
-
-const quickController = new quickControllers();
-export default quickController;

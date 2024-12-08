@@ -66,7 +66,7 @@ class Tags {
                 throw new Error("No tags found");
             }
 
-            return rows; // Controller se encarga de devolverlas formateadas
+            return rows;
 
         } catch (error) {
             throw error;
@@ -112,23 +112,33 @@ class Tags {
     }
 
 
-    // Add tag to URL
-    async addToUrl(params: addToUrl): Promise<object> {
+    async addToUrl(params: { urlId: number; tagId: number; client?: PoolClient }): Promise<object> {
         const { urlId, tagId, client } = params;
-
-        try {
-            await client.query(
-                "INSERT INTO url_tags (url_id, tag_id) VALUES ($1, $2)",
-                [urlId, tagId]
-            );
-
-            return { success: true };
-        } catch (error) {
-            console.error("Error adding tag to URL:", error);
-            throw new Error("Failed to add tag to URL");
+    
+        if (client) {
+            // Si ya hay un cliente, usamos el cliente directamente
+            try {
+                await client.query(
+                    'INSERT INTO url_tags (url_id, tag_id) VALUES ($1, $2)',
+                    [urlId, tagId]
+                );
+                return { success: true };
+            } catch (error) {
+                console.error('Error adding tag to URL:', error);
+                throw new Error('Failed to add tag to URL');
+            }
+        } else {
+            return await databaseClient.transaction(async (client) => {
+                await client.query(
+                    'INSERT INTO url_tags (url_id, tag_id) VALUES ($1, $2)',
+                    [urlId, tagId]
+                );
+                return { success: true };
+            });
         }
     }
-
+    
+    
       
 }
 

@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import tag from "../models/Tags";
 
 
-class tagController{
-    async create(req: Request, res: Response){
+export class tagController{
+    static async create(req: Request, res: Response){
         const { userId, name, description } = req.body;
     
         if (!userId) {
@@ -24,7 +24,7 @@ class tagController{
         }
     }
     
-    async get(req: Request, res: Response){
+    static async get(req: Request, res: Response){
         const { userId, tagId } = req.params;
         
         if (!userId) {
@@ -48,7 +48,7 @@ class tagController{
         }
     }
     
-    async getAll(req: Request, res: Response){
+    static async getAll(req: Request, res: Response){
         const { userId } = req.params;
         
         if (!userId) {
@@ -68,7 +68,7 @@ class tagController{
         }
     }
     
-    async update(req: Request, res: Response){
+    static async update(req: Request, res: Response){
         const { userId, tagId } = req.params;
         const { name, description } = req.body;
     
@@ -98,7 +98,7 @@ class tagController{
         }
     }
     
-    async delete(req: Request, res: Response){
+    static async delete(req: Request, res: Response){
         const { userId, tagId } = req.params;
         
         if (!userId) {
@@ -122,7 +122,28 @@ class tagController{
             return res.status(500).json({ error: "Error deleting tag" });
         }
     } 
+    static async addToUrl(req: Request, res: Response){
+        const { tagId, urlId } = req.body;
+    
+        if (!tagId) {
+            return res.status(400).json({ error: "Tag ID is required" });
+        }
+    
+        if (!urlId) {
+            return res.status(400).json({ error: "URL ID is required" });
+        }
+    
+        try {
+            const result = await tag.addToUrl({tagId, urlId});
+    
+            if (!result) {
+                throw new Error("Error adding tag to URL");
+            }
+    
+            return res.status(200).json({ message: "Tag added successfully" });
+        } catch (error) {
+            console.error("Error adding tag to URL:", error);
+            return res.status(500).json({ error: "Error adding tag to URL" });
+        }
+    }
 }
-
-const tagsController = new tagController();
-export default tagsController;
