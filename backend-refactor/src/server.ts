@@ -4,8 +4,6 @@ import cors from 'cors';
 
 const app = express();
 
-//Middlewares
-
 app.use(cors(corsConfig));
 
 app.use(express.json());

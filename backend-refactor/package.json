@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "tsc": "tsc",
-    "start": "node dist/src/server.js",
-    "dev": "ts-node-dev src/server.ts",
+    "start": "tsc && cd build && node server.js",
+    "dev": "tsc && cd build && node server.js",
     "build": "tsc"
   },
   "keywords": [],
@@ -29,6 +29,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-openid-connect": "^2.17.1",
     "nanoid": "^5.0.7",
     "pg": "^8.13.1",
     "redis": "^4.7.0"

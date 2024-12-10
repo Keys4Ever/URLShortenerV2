@@ -59,7 +59,7 @@ class Url {
                 if (urlTags && urlTags.length > 0) { 
                     for (const urlTag of urlTags) { 
                         try {
-                            await tag.addToUrl({urlId, tagId: urlTag.id, client});
+                            await tag.addToUrl({urlId, tagId: Number(urlTag.id), client});
                         } catch (error) {
                             console.error(`Error al añadir tag ${urlTag.id} a la URL ${urlId}:`, error);
                         }
@@ -105,12 +105,12 @@ class Url {
 
         return originalUrl;
     }
-    async delete(shortUrl: string): Promise<void> {
+    async delete(shortUrl: string, userId: string): Promise<void> {
         try {
             await databaseClient.transaction(async (client) => {
                 const result = await client.query(
-                    "DELETE FROM urls WHERE short_url = $1",
-                    [shortUrl]
+                    "DELETE FROM urls WHERE short_url = $1 AND user_id = $2",
+                    [shortUrl, userId]
                 );
 
                 if (result.rowCount === 0) {
@@ -125,7 +125,7 @@ class Url {
         }
     }
 
-    async getAllFromUrl(shortUrl: string): Promise<Url[]> {
+    async getAllFromUrl(shortUrl: string, userId: string): Promise<Url[]> {
 
         if (!isValidShortUrl(shortUrl)) {
             throw new Error("Invalid short URL format");
@@ -133,8 +133,8 @@ class Url {
 
         try {
             const { rows } = await databaseClient.execute(
-                "SELECT * FROM urls WHERE short_url = $1",
-                [shortUrl]
+                "SELECT * FROM urls WHERE short_url = $1 AND user_id = $2",
+                [shortUrl, userId]
             );
             if(rows.length == 0){
                 throw new Error("No hay urls con ese short url");

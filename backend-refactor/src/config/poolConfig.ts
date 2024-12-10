@@ -9,6 +9,6 @@ export const poolConfig = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     ssl: {
-        rejectUnauthorized: false, // Necesario para AWS RDS
+        rejectUnauthorized: false,
     },
 }

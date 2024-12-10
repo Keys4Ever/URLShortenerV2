@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import url from "../models/Url";
 import redis from "../models/Redis";
+import { isValidShortUrl } from '../utils/isValidShortUrl';
 
 
 export class urlController{
@@ -10,7 +11,11 @@ export class urlController{
         if (!userId) {
             return res.status(400).json({ error: "User ID es necesario" });
         }
-    
+
+        if (shortUrl && !isValidShortUrl(shortUrl)) {
+            return res.status(400).json({ error: "Short URL no es valido" });
+        }
+
         if (!longUrl) {
             return res.status(400).json({ error: "No puedo acortar la URL si no me das una URL para acortar :v" });
         }
@@ -34,6 +39,9 @@ export class urlController{
         if(!shortUrl){
             return res.status(400).json({ error: "Short URL is required" });
         }
+        if(!isValidShortUrl(shortUrl)){
+            return res.status(400).json({ error: "Short URL is invalid" });
+        }
     
         originalUrl= await redis.getOriginalUrl(shortUrl);
     
@@ -45,25 +53,25 @@ export class urlController{
     }
     
     static async delete(req: Request, res: Response){
-        const { shortUrl } = req.params;
+        const { shortUrl, userId } = req.params;
         
             if(!shortUrl){
                 return res.status(400).json({ error: "Short URL is required" });
             }
     
-        await url.delete(shortUrl);
+        await url.delete(shortUrl, userId);
         return res.status(200).json({ message: "URL deleted successfully" });
     }
     
     static async getAllFromUrl(req: Request, res: Response){
-        const { shortUrl } = req.params;
+        const { shortUrl, userId } = req.params;
         
         if(!shortUrl){
             return res.status(400).json({ error: "Short URL is required" });
         }
     
         try {
-            const urls = await url.getAllFromUrl(shortUrl);
+            const urls = await url.getAllFromUrl(shortUrl, userId);
     
             if(urls.length == 0){
                 return res.status(404).json({ error: "URL not found" });
