@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { tagController } from '../controllers/tagsController';
-import { asyncHandler } from '../utils/AsyncHandler';
+import { tagController } from '../controllers/tagsController.js';
+import { asyncHandler } from '../utils/AsyncHandler.js';
 
 export const tagsRouter = Router();
 

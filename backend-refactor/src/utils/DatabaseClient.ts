@@ -1,14 +1,14 @@
-import { Pool, PoolClient, QueryResult } from 'pg';
-import { poolConfig } from '../config/poolConfig';
+import pg from 'pg';
+import { poolConfig } from '../config/poolConfig.js';
 
 class DatabaseClient{
-    public pool: Pool;
+    public pool: pg.Pool;
 
     constructor() {
-        this.pool = new Pool(poolConfig);
+        this.pool = new pg.Pool(poolConfig);
     }
 
-    async execute(query: string, params?: any[]): Promise<QueryResult> {
+    async execute(query: string, params?: any[]): Promise<pg.QueryResult> {
         const client = await this.pool.connect();
         try {
             const result = await client.query(query, params);
@@ -20,7 +20,7 @@ class DatabaseClient{
         }
     }
 
-    async transaction<T = any>(callback: (client: PoolClient) => Promise<T>): Promise<T> {
+    async transaction<T = any>(callback: (client: pg.PoolClient) => Promise<T>): Promise<T> {
         const client = await this.pool.connect();
         try {
             await client.query('BEGIN');

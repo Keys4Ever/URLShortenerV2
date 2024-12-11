@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import url from "../models/Url";
-import redis from "../models/Redis";
-import { isValidShortUrl } from '../utils/isValidShortUrl';
+import url from "../models/Url.js";
+import redis from "../models/Redis.js";
+import { isValidShortUrl } from '../utils/isValidShortUrl.js';
 
 
 export class urlController{
@@ -105,12 +105,13 @@ export class urlController{
     }
 
     static async updateUrl(req: Request, res: Response){
-        const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags } = req.body;
+        const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags, description, currentDescription } = req.body;
     
         try {
-            const result = await url.updateUrl({ currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags });
+            const result = await url.updateUrl({ currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags, description, currentDescription });
          
             if (result.error) {
+                console.error("Error updating URL:", result);
                 throw new Error("Error updating URL");
             }  
     

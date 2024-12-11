@@ -1,7 +1,7 @@
 import { auth } from "express-openid-connect";
 import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
-import databaseClient from "../utils/DatabaseClient";
+import databaseClient from "../utils/DatabaseClient.js";
 
 dotenv.config();
 
@@ -23,10 +23,10 @@ const checkUserInDatabase = async (req: Request, _res: Response, next: NextFunct
         const [_provider, provider_id] = sub.split("|");
 
         try {
-            const { rows: existingUser } = await databaseClient.execute("SELECT * FROM users WHERE user_id = ?", [provider_id]);
+            const { rows: existingUser } = await databaseClient.execute("SELECT * FROM users WHERE user_id = $1", [provider_id]);
 
             if (!existingUser.length) {
-                await databaseClient.execute("INSERT INTO users (email, user_id, username, profile_picture) VALUES (?,?,?,?)", [email, provider_id, nickname, picture]);
+                await databaseClient.execute("INSERT INTO users (email, user_id, username, profile_picture) VALUES ($1, $2, $3, $4)", [email, provider_id, nickname, picture]);
                 console.log("New OAuth user inserted into database");
             } else {
                 console.log("OAuth user already exists in the database");

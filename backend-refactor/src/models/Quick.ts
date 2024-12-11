@@ -1,5 +1,5 @@
-import databaseClient from "../utils/DatabaseClient";
-import url from "./Url";
+import databaseClient from "../utils/DatabaseClient.js";
+import url from "./Url.js";
 import crypto from 'crypto';
 
 interface createResult {

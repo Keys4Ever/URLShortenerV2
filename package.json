@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pnpm --filter * dev"
+    "dev": "concurrently -n backend,frontend -c green,blue \"pnpm --filter backend-refactor start\" \"pnpm --filter frontend dev\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^9.1.0",
     "qrcode": "^1.5.4"
   }
 }

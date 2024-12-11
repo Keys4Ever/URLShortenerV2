@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import databaseClient from "../utils/DatabaseClient";
+import databaseClient from "../utils/DatabaseClient.js";
 
 // Params interfaces
 interface initializeUrlStatsParams {
@@ -15,22 +15,16 @@ class Stats{
         const query = `
             INSERT INTO url_stats (url_id, clicks, access_date)
             VALUES ($1, 0, NOW())
-            ON CONFLICT (url_id) DO UPDATE SET clicks = url_stats.clicks + 1;
+            ON CONFLICT (url_id) DO NOTHING;
         `;
-
+    
         try {
-            const result = await client.query(query, [urlId]);
-          
-            if (result.rowCount === 0) {
-                throw new Error("Esto no debería pasar, lol");
-            }
+            await client.query(query, [urlId]);
         } catch (error) {
             console.error("Error al crear la tabla url_stats:", error);
             throw error;
         }
-
     }
-
     async updateClicks(shortUrl: string): Promise<void> {
         try {
             const id = await getIdFromUrl(shortUrl);

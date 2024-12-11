@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import quick from "../models/Quick";
+import quick from "../models/Quick.js";
 
 
 export class quickControllers{

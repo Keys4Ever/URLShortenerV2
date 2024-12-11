@@ -1,5 +1,5 @@
 import { PoolClient } from "pg";
-import databaseClient from "../utils/DatabaseClient";
+import databaseClient from "../utils/DatabaseClient.js";
 
 interface createResult {
     success: boolean;
@@ -15,12 +15,6 @@ interface create{
 interface params {
     userId: string;
     tagId: string;
-}
-
-interface addToUrl{
-    tagId: string;
-    urlId: string;
-    client: PoolClient;
 }
 
 interface update extends create, params{}
@@ -49,6 +43,12 @@ class Tags {
             const { rows } = await databaseClient.execute("SELECT id, name, description FROM tags WHERE user_id = $1 AND id = $2", [userId, tagId]);
         
             if (rows.length === 0) {
+                console.log("Tag not found for user ID: " + userId);
+                console.log("--------------------------------------------------")
+                console.log("Tag ID: " + tagId);
+                console.log("User ID: " + userId);
+                console.log(rows);
+                console.log("--------------------------------------------------")
                 throw new Error("Tag not found");
             }
         
@@ -77,9 +77,16 @@ class Tags {
         const { userId, tagId } = params;
 
         try {
-            const { rows } = await databaseClient.execute("DELETE FROM tags WHERE user_id = $1 AND id = $2", [userId, tagId]);
+            const { rows } = await databaseClient.execute("DELETE FROM tags WHERE user_id = $1 AND id = $2 RETURNING *", [userId, tagId]);
            
             if (rows.length === 0) {
+                
+                console.log("Tag not found for user ID: " + userId);
+                console.log("--------------------------------------------------")
+                console.log("Tag ID: " + tagId);
+                console.log("User ID: " + userId);
+                console.log(rows);
+                console.log("--------------------------------------------------")
                 throw new Error("Tag not found");
             }
 
@@ -100,6 +107,13 @@ class Tags {
                 );
 
                 if (result.rowCount === 0) {
+                    
+                console.log("Tag not found for user ID: " + userId);
+                console.log("--------------------------------------------------")
+                console.log("Tag ID: " + tagId);
+                console.log("User ID: " + userId);
+                console.log(result);
+                console.log("--------------------------------------------------")
                     throw new Error("Tag not found or no changes made");
                 }
             });

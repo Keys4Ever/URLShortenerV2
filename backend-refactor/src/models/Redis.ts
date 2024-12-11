@@ -1,5 +1,5 @@
-import redisClient from "../config/redisConfig";
-import stats from "./Stats";
+import redisClient from "../config/redisConfig.js";
+import stats from "./Stats.js";
 class Redis {
     async getOriginalUrl(shortUrl: string): Promise<string | null> {
         try {

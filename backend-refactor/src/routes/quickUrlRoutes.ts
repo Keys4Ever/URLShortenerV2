@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { quickControllers } from '../controllers/quickController';
-import { asyncHandler } from '../utils/AsyncHandler';
+import { quickControllers } from '../controllers/quickController.js';
+import { asyncHandler } from '../utils/AsyncHandler.js';
 
 export const quickRouter = Router();
 

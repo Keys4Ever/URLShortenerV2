@@ -30,7 +30,7 @@ export const getTag = async (userId, tagId) => {
         });
         
         if (rows.length === 0) {
-            throw new Error("Tag not found");
+            throw new Error("Tag not found for userId: " + userId);
         }
         
         return rows[0];
@@ -38,7 +38,7 @@ export const getTag = async (userId, tagId) => {
         throw error;
     }
 };
-
+q
 // Get all Tags for a User
 export const getAllTags = async (userId) => {
     console.log("Received userId: ", userId);

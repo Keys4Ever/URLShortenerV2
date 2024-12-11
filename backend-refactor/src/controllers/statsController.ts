@@ -1,6 +1,6 @@
-import stats from "../models/Stats";
+import stats from "../models/Stats.js";
 import { Request, Response } from "express";
-import { isValidShortUrl } from "../utils/isValidShortUrl";
+import { isValidShortUrl } from "../utils/isValidShortUrl.js";
 
 export class statsController {
     static async getStats(req: Request, res: Response) { 

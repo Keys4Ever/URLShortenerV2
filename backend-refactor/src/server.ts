@@ -1,18 +1,23 @@
 import express from 'express';
-import {corsConfig} from './config/corsConfig';
+import {corsConfig} from './config/corsConfig.js';
 import cors from 'cors';
-
-import quickRoutes from './routes/quickUrlRoutes';
-import tagsRoutes from './routes/tagsRoutes';
-import statsRoutes from './routes/urlStatRoutes';
-import authRoutes from './routes/authRoutes';
-import urlRoutes from './routes/urlRoutes';
+import quickRoutes from './routes/quickUrlRoutes.js';
+import tagsRoutes from './routes/tagsRoutes.js';
+import statsRoutes from './routes/urlStatRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import urlRoutes from './routes/urlRoutes.js';
+import { authMiddleware, checkUserInDatabase } from './auth/auth0.js';
 
 const app = express();
 
 app.use(cors(corsConfig));
 
+app.use(authMiddleware);
+
+app.use(checkUserInDatabase);
+
 app.use(express.json());
+
 
 app.get('/', (_req, res) => { 
   res.redirect('http://localhost:5173');

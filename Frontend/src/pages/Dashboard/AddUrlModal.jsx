@@ -12,7 +12,6 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [alerta, setAlerta] = useState('');
 
-
   const handleAddOrUpdateUrl = async () => {
     let finalLongUrl = longUrl;
     
@@ -39,7 +38,16 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
           description,
           tags: selectedTags,
         };
-        await updateUrl(item.shortUrl, item.longUrl, shortUrl, finalLongUrl, selectedTags, item.tags);
+        await updateUrl(
+          item.shortUrl, 
+          item.longUrl, 
+          shortUrl, 
+          finalLongUrl, 
+          selectedTags, 
+          item.tags, 
+          description,
+          item.description
+        );
         if (updateUrl.error) {
           setError(updateUrl.error);
           return;
@@ -47,7 +55,13 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
         console.log(updatedUrl);
         updateUrlsLocally(updatedUrl, true);
       } else {
-        const newUrl = await createShortUrl(userId, finalLongUrl, shortUrl, selectedTags, description);
+        const newUrl = await createShortUrl(
+          userId, 
+          finalLongUrl, 
+          shortUrl, 
+          selectedTags, 
+          description
+        );
   
         if (newUrl.error) {
           setError(newUrl.error);

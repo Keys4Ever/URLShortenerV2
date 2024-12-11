@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { urlController } from '../controllers/urlController';
-import { asyncHandler } from '../utils/AsyncHandler';
+import { urlController } from '../controllers/urlController.js';
+import { asyncHandler } from '../utils/AsyncHandler.js';
 
 export const urlRouter = Router();
 

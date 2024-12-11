@@ -1,10 +1,10 @@
-import { BuildUpdateQueryParams, CreateUrl, currentUrl, HandleTagsParams, Tag, TagComparisonParams, UpdateParams, UpdateResponse, UpdateUrlInput } from "../types/UrlTypes";
-import databaseClient from "../utils/DatabaseClient";
+import { BuildUpdateQueryParams, CreateUrl, currentUrl, HandleTagsParams, Tag, TagComparisonParams, UpdateParams, UpdateResponse, UpdateUrlInput } from "../types/UrlTypes.js";
+import databaseClient from "../utils/DatabaseClient.js";
 import { nanoid } from "nanoid";
-import redisClient from "../config/redisConfig";
-import stats from "./Stats";
-import tag from "./Tags";
-import { isValidShortUrl } from "../utils/isValidShortUrl";
+import redisClient from "../config/redisConfig.js";
+import stats from "./Stats.js";
+import tag from "./Tags.js";
+import { isValidShortUrl } from "../utils/isValidShortUrl.js";
 
 interface createResult {
     url: string;
@@ -14,9 +14,13 @@ interface createResult {
 
 class Url {
     
+    public sanitizeDescription = sanitizeDescription;
+
     async createShortUrl(input: CreateUrl): Promise<createResult> {
         let { userId, longUrl, shortUrl, description, urlTags } = input;
 
+
+        description ? description = this.sanitizeDescription(description) : '';
         if (shortUrl && !isValidShortUrl(shortUrl)) {
             throw new Error("Invalid short URL format");
         }
@@ -109,7 +113,7 @@ class Url {
         try {
             await databaseClient.transaction(async (client) => {
                 const result = await client.query(
-                    "DELETE FROM urls WHERE short_url = $1 AND user_id = $2",
+                    "DELETE FROM urls WHERE short_url = $1 AND user_id = $2 RETURNING *",
                     [shortUrl, userId]
                 );
 
@@ -202,9 +206,22 @@ class Url {
         }
     }
 
-    public async updateUrl(input: UpdateUrlInput): Promise<UpdateResponse> {
-        const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags } = input;
+    async updateUrl(input: UpdateUrlInput): Promise<UpdateResponse> {
+        let { 
+            currentShortUrl, 
+            currentLongUrl, 
+            newShortUrl, 
+            newLongUrl, 
+            tags, 
+            currentTags, 
+            description, 
+            currentDescription 
+        } = input;
         
+        // Sanitize descriptions
+        description = description ? this.sanitizeDescription(description) : undefined;
+        currentDescription = currentDescription ? this.sanitizeDescription(currentDescription) : undefined;
+    
         const updateParams: UpdateParams = {
             currentLongUrl,
             newLongUrl,
@@ -212,21 +229,26 @@ class Url {
             newShortUrl,
             tags: tags || [],
             currentTags: currentTags || [],
+            description,
+            currentDescription
         };
-    
+        
+        // Check if any changes exist
         if (!hasChanges(updateParams)) {
             return { error: 'No changes detected' };
         }
-    
+        
         const buildParams: BuildUpdateQueryParams = {
             currentShortUrl,
             currentLongUrl,
             newShortUrl,
             newLongUrl,
+            description,
+            currentDescription
         };
-    
+        
         const { query, args } = buildUpdateQuery(buildParams);
-    
+        
         try {
             const response = await databaseClient.transaction(async (client) => {
                 if (query !== '') {
@@ -235,21 +257,22 @@ class Url {
                         throw new Error('No matching URL found or no changes made');
                     }
                 }
-    
+        
                 const tagParams: HandleTagsParams = {
                     client,
                     addedTags: getAddedTags({ tags, currentTags }),
                     removedTags: getRemovedTags({ currentTags, tags }),
                     url: newShortUrl || currentShortUrl,
                 };
-    
+        
                 await handleTags(tagParams);
-    
+        
                 return { message: 'Update successful' };
             });
-    
+        
             return response;
         } catch (error) {
+            console.error("Error updating URL:", error);
             throw error;
         }
     }
@@ -285,20 +308,24 @@ function hasChanges(params: UpdateParams): boolean {
         newShortUrl,
         tags = [],
         currentTags = [],
+        currentDescription,
+        description
     } = params;
 
     if (
         currentLongUrl !== (newLongUrl ?? currentLongUrl) ||
-        currentShortUrl !== (newShortUrl ?? currentShortUrl)
+        currentShortUrl !== (newShortUrl ?? currentShortUrl) ||
+        currentDescription !== (description ?? currentDescription)
     ) {
         return true;
     }
-
+    console.log('No cchanges detected in description: ', currentDescription,"\n" ,description);
     const addedTags = getAddedTags({ tags, currentTags });
     const removedTags = getRemovedTags({ currentTags, tags });
 
     return addedTags.length > 0 || removedTags.length > 0;
 }
+
 
 function getAddedTags(params: TagComparisonParams): Tag[] {
     const { tags = [], currentTags = [] } = params;
@@ -311,7 +338,14 @@ function getRemovedTags(params: TagComparisonParams): Tag[] {
 }
 
 function buildUpdateQuery(params: BuildUpdateQueryParams): { query: string; args: any[] } {
-    const { currentShortUrl, currentLongUrl, newShortUrl, newLongUrl } = params;
+    const { 
+        currentShortUrl, 
+        currentLongUrl, 
+        newShortUrl, 
+        newLongUrl,
+        description,
+        currentDescription 
+    } = params;
 
     let query = 'UPDATE urls SET ';
     const updates: string[] = [];
@@ -324,6 +358,10 @@ function buildUpdateQuery(params: BuildUpdateQueryParams): { query: string; args
     if (newLongUrl !== undefined && currentLongUrl !== newLongUrl) {
         updates.push(`original_url = $${args.length + 1}`);
         args.push(newLongUrl);
+    }
+    if (description !== undefined && currentDescription !== description) {
+        updates.push(`description = $${args.length + 1}`);
+        args.push(description);
     }
 
     if (updates.length > 0) {
@@ -370,6 +408,21 @@ async function handleTags(params: HandleTagsParams): Promise<void> {
             [urlId, tag.id]
         );
     }
+}
+function sanitizeDescription(description?: string): string | undefined {
+    if (!description) return description;
+
+    // Replace potentially dangerous characters
+    return description
+        .replace(/&/g, '&amp;')   // Escape ampersand first to prevent double-escaping
+        .replace(/</g, '&lt;')    // Less than
+        .replace(/>/g, '&gt;')    // Greater than
+        .replace(/"/g, '&quot;')  // Double quotes
+        .replace(/'/g, '&#39;')   // Single quotes
+        .replace(/`/g, '&#96;')   // Backticks
+        .replace(/=/g, '&#61;')   // Equals sign
+        .replace(/\\/g, '&#92;')  // Backslash
+        .trim();                  // Remove leading and trailing whitespace
 }
 const url = new Url();
 

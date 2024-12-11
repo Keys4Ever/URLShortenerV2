@@ -33,23 +33,30 @@ export interface UpdateUrlInput {
     newLongUrl?: string;
     tags?: Tag[];
     currentTags?: Tag[];
+    description?: string;
+    currentDescription?: string;
 }
 
-export type UpdateParams = {
+export interface BuildUpdateQueryParams {
+    currentShortUrl: string;
+    currentLongUrl: string;
+    newShortUrl?: string;
+    newLongUrl?: string;
+    description?: string;
+    currentDescription?: string;
+}
+
+// Update the UpdateParams interface
+export interface UpdateParams {
     currentLongUrl: string;
     newLongUrl?: string;
     currentShortUrl: string;
     newShortUrl?: string;
     tags?: Tag[];
     currentTags?: Tag[];
-};
-
-export type BuildUpdateQueryParams = {
-    currentShortUrl: string;
-    currentLongUrl: string;
-    newShortUrl?: string;
-    newLongUrl?: string;
-};
+    currentDescription?: string;
+    description?: string;
+}
 
 export type TagComparisonParams = {
     tags?: Tag[];
