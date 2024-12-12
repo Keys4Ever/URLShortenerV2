@@ -26,7 +26,7 @@ const QuickShorten = () => {
       console.log(response);
       if (!response.success) throw new Error(response.error || 'Error shortening URL');
 
-      const generatedShortUrl = `keys.lat/${auth.authenticated ? response.url : response.shortUrl}`;
+      const generatedShortUrl = `keys.lat/${ response.url }`;
       setShortUrl(generatedShortUrl);
 
       if (!auth.authenticated) {

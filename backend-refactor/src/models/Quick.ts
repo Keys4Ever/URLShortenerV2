@@ -32,7 +32,6 @@ class Quick {
         }
         
         const secretKey = crypto.randomBytes(64).toString('hex');
-        // Añadir la url a la tabla de quick urls
         try {
 
             databaseClient.transaction(async (client) => {
@@ -58,16 +57,16 @@ class Quick {
 
     async connect(userId: string, secretKey: string): Promise<connectResult | string> {
         try {
-            await databaseClient.transaction(async (client) => {
-                // Obtener información de la URL a través de `secretKey`
+            const result = await databaseClient.transaction(async (client) => {
                 const urlResult = await client.query(
                     `
                     SELECT 
-                        qu.id AS urlId, 
+                        qu.id AS quickUrlId, 
+                        u.id AS urlId,
                         qu.short_url AS shortUrl, 
                         u.original_url AS longUrl,
                         u.created_at AS date,
-                        (SELECT COUNT(*) FROM url_stats WHERE url_id = qu.id) AS clicks
+                        (SELECT COUNT(*) FROM url_stats WHERE url_id = u.id) AS clicks 
                     FROM quick_urls qu
                     JOIN urls u ON qu.short_url = u.short_url
                     WHERE qu.secret_key = $1
@@ -81,17 +80,15 @@ class Quick {
     
                 const urlData = urlResult.rows[0];
     
-                // Actualizar la URL para asociarla con el `userId`
                 const updateResult = await client.query(
-                    'UPDATE urls SET user_id = $1 WHERE id = $2',
+                    'UPDATE urls SET user_id = $1 WHERE id = $2 RETURNING *',
                     [userId, urlData.urlid]
                 );
     
-                if (updateResult.rowCount === 0) {
+                if (updateResult.rows.length === 0) {
                     throw new Error('No se pudo actualizar el user_id en la tabla urls.');
                 }
     
-                // Eliminar la entrada de `quick_urls`
                 const deleteResult = await client.query(
                     'DELETE FROM quick_urls WHERE secret_key = $1',
                     [secretKey]
@@ -100,8 +97,8 @@ class Quick {
                 if (deleteResult.rowCount === 0) {
                     throw new Error('No se pudo eliminar la entrada en quick_urls.');
                 }
-
-                const a: connectResult = {
+    
+                return {
                     success: true,
                     message: 'URL vinculada con éxito.',
                     newUrl: {
@@ -112,14 +109,13 @@ class Quick {
                         clicks: urlData.clicks,
                     },
                 };
-                return a;
             });
+    
+            return result;
         } catch (error) {
             console.error('Error al vincular la URL:', error);
             throw error;
         }
-        return '';
-        
     }
     
 }

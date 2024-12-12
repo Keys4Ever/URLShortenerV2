@@ -16,19 +16,20 @@ export const getOriginalUrl = async (shortUrl) => {
     return await response.json();
 };
 
-export const deleteUrl = async (shortUrl) => {
-    const response = await fetch(`${API_BASE_URL}api/url/${shortUrl}`, {
+export const deleteUrl = async (shortUrl, userId) => {
+    const response = await fetch(`${API_BASE_URL}api/url/${shortUrl}/${userId}`, {
         method: 'DELETE',
     });
     return await response.json();
 };
 
-export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags) => {
+export const updateUrl = async (currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags, description, currentDescription) => {
     const response = await fetch(`${API_BASE_URL}api/url`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags })
+        body: JSON.stringify({ currentShortUrl, currentLongUrl, newShortUrl, newLongUrl, tags, currentTags, description, currentDescription })
     });
+    
     return await response.json();
 };
 

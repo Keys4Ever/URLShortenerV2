@@ -39,7 +39,7 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
   const handleDeleteUrl = async () => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta URL?')) {
       try {
-        await deleteUrl(item.shortUrl);
+        await deleteUrl(item.shortUrl, userId);
         deleteUrlLocally(item.id);
       } catch (error) {
         console.error('Error al eliminar la URL:', error);

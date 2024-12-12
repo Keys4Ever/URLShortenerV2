@@ -4,12 +4,8 @@ import quick from "../models/Quick.js";
 
 export class quickControllers{
     static async create(req: Request, res: Response){
-        const { userId, longUrl } = req.body;
+        const { longUrl } = req.body;
         
-        if(!userId){
-            return res.status(400).json({ error: "User ID es necesario" });
-        }
-    
         if(!longUrl){
             return res.status(400).json({ error: "No puedo acortar la URL si no me das una URL para acortar :v" });
         }
@@ -41,12 +37,16 @@ export class quickControllers{
     
         try {
             const result = await quick.connect(userId, secretKey);
-    
-            if(typeof result === 'string'){
-                return res.status(200).json({ message: result });
+            
+            console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+            console.log(result);
+            console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+
+            if(typeof result === 'object'){
+                return res.status(200).json({ result });
             }
-    
-            return res.status(200).json(result);
+            
+            return res.status(200).json({ message: result });
         } catch (error) {
             console.error("Error connecting quick url:", error);
             return res.status(500).json({ error: "Error connecting quick url" });
