@@ -3,7 +3,7 @@ Second version of my URL Shortener. This one will have a frontend with React, an
 
 
 
-### Refactors
+### Refactorsa
 - [ ] Cambiar base de datos a postgresql o mongodb
 - [ ] Arquitectura frontend: Screaming arq
 - [ ] Quizás refactorizar el dashboard -> dejar de usar las actualizaciones en el front
