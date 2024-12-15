@@ -49,7 +49,7 @@ export class urlController{
             originalUrl = await url.getOriginalUrl(shortUrl);
         }
         console.log(originalUrl)
-        return res.status(200).json({ originalUrl });
+        return res.status(200).json(originalUrl);
     }
     
     static async delete(req: Request, res: Response){

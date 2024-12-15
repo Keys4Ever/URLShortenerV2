@@ -8,9 +8,10 @@ class Redis {
                 return null;
             }
 
+
             stats.updateClicks(shortUrl);
 
-            return response;
+            return JSON.parse(response);
         } catch (error) {
             throw error;
         }

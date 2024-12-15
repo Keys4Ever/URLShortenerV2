@@ -10,15 +10,26 @@ const ShortUrl = () => {
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/url/${shortUrl}`, {
                     method: 'GET',
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
-                window.location.href = data.originalUrl;
+
+                if (data && data.original_url) {
+                    window.location.href = data.original_url;
+                } else {
+                    console.error('La respuesta no contiene original_url.');
+                }
+
             } catch (error) {
                 console.error('Error fetching the URL:', error);
             }
         };
 
         fetchUrl();
-    }, [shortUrl]); // Added shortUrl as a dependency
+    }, [shortUrl]);
 
     return null;
 };
