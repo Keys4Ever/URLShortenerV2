@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchAuthStatus = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/status`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/auth-status`, {
         credentials: 'include',
       });
       const data = await response.json();
