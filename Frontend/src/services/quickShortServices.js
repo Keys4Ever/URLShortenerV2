@@ -1,5 +1,5 @@
 export const quickShort = async (url) => {
-    const response = await fetch('http://localhost:3000/api/quick', {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/quick`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ export const quickShort = async (url) => {
 }
 
 export const addSecretToUser = async (user, secret) => {
-  const response = await fetch('http://localhost:3000/api/quick/connect', {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/secret`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

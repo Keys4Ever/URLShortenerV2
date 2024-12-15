@@ -1,17 +1,27 @@
+import dotenv from 'dotenv'
+
+dotenv.config({ path: '../.env' });
+
+
+
 import { auth } from "express-openid-connect";
-import dotenv from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import databaseClient from "../utils/DatabaseClient.js";
 
-dotenv.config();
+const {
+    AUTH0_SECRET,
+    AUTH0_BASEURL,
+    AUTH0_CLIENTID,
+    AUTH0_ISSUERBASE
+} = process.env;
 
 const config = {
     authRequired: false,
     auth0Logout: true,
-    secret: process.env.AUTH0_SECRET,
-    baseURL: process.env.AUTH0_BASEURL,
-    clientID: process.env.AUTH0_CLIENTID,
-    issuerBaseURL: process.env.AUTH0_ISSUERBASE,
+    secret: AUTH0_SECRET,
+    baseURL: AUTH0_BASEURL,
+    clientID: AUTH0_CLIENTID,
+    issuerBaseURL: AUTH0_ISSUERBASE,
 };
 
 const authMiddleware = auth(config);

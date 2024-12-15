@@ -1,9 +1,7 @@
-const API_BASE_URL = 'http://localhost:3000/';
-
 // Crear un nuevo tag
 export const createTag = async (name, description, userId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags/`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, description, userId })
@@ -24,7 +22,7 @@ export const createTag = async (name, description, userId) => {
 // Obtener un tag específico por ID
 export const getTag = async (userId, tagId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags/${userId}/${tagId}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/${userId}/${tagId}`);
         
         if (!response.ok) {
             throw new Error('Error al obtener el tag');
@@ -41,7 +39,7 @@ export const getTag = async (userId, tagId) => {
 // Obtener todos los tags de un usuario
 export const getAllTags = async (userId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags/?userId=${userId}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/?userId=${userId}`);
         
         if (!response.ok) {
             throw new Error('Error al obtener los tags');
@@ -58,7 +56,7 @@ export const getAllTags = async (userId) => {
 // Actualizar un tag por ID
 export const updateTag = async (tagId, newName, newDescription, userId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags/${tagId}`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/${tagId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: newName, description: newDescription, userId: userId })
@@ -79,7 +77,7 @@ export const updateTag = async (tagId, newName, newDescription, userId) => {
 // Eliminar un tag por ID
 export const deleteTag = async (userId, tagId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/tags/${userId}/${tagId}`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/${userId}/${tagId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,7 +99,7 @@ export const deleteTag = async (userId, tagId) => {
 // Asociar un tag a una URL
 export const addTagToUrl = async (urlId, tagId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}api/url-tags`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/url-tags`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ urlId, tagId })

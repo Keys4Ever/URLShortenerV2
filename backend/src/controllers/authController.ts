@@ -1,4 +1,9 @@
 import { Request, Response } from "express";
+import dotenv from 'dotenv'
+
+dotenv.config({ path: '../.env' });
+
+
 
 const profileController = (req: Request, res: Response) => {
     if (req.oidc.isAuthenticated()) {
@@ -19,7 +24,7 @@ const authStatusController = (req: Request, res: Response) => {
 // Logout user
 const logoutController = (_req: Request, res: Response) => {
     res.oidc.logout({
-        returnTo: process.env.BASE_URL,
+        returnTo: process.env.FRONTEND_URL,
     });
 };
 
@@ -29,7 +34,7 @@ const loginController = (req: Request, res: Response) => {
     if (!req.oidc.isAuthenticated()) {
         whereToRedirect ? res.oidc.login({returnTo: whereToRedirect}) : res.oidc.login();
     } else {
-        res.redirect('http://localhost:3000/');
+        res.redirect(String(process.env.FRONTEND_URL));
     }
 };
 

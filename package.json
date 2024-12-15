@@ -2,10 +2,11 @@
   "name": "URLShortenerV2",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently -n backend,frontend -c green,blue \"pnpm --filter backend-refactor start\" \"pnpm --filter frontend dev\""
+    "dev": "concurrently -n backend,frontend -c green,blue \"pnpm --filter backend start\" \"pnpm --filter frontend dev\""
   },
   "keywords": [],
   "author": "",

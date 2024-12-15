@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchAuthStatus = async () => {
     try {
-      const response = await fetch('http://localhost:3000/auth/auth-status', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/status`, {
         credentials: 'include',
       });
       const data = await response.json();
@@ -26,11 +26,11 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = () => {
-    window.location.href = 'http://localhost:3000/auth/login'; 
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/login`;
   };
 
   const logout = async () => {
-    window.location.href = 'http://localhost:3000/auth/logout';
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/logout`;
   };
 
   return (

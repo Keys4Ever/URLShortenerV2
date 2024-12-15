@@ -33,7 +33,6 @@ class Tags {
         
             return { success: true, tagId: result.rows[0].id };
         } catch (error) {
-            console.error("Error al crear la etiqueta:", error);
             throw error;
         }
     }
@@ -43,12 +42,6 @@ class Tags {
             const { rows } = await databaseClient.execute("SELECT id, name, description FROM tags WHERE user_id = $1 AND id = $2", [userId, tagId]);
         
             if (rows.length === 0) {
-                console.log("Tag not found for user ID: " + userId);
-                console.log("--------------------------------------------------")
-                console.log("Tag ID: " + tagId);
-                console.log("User ID: " + userId);
-                console.log(rows);
-                console.log("--------------------------------------------------")
                 throw new Error("Tag not found");
             }
         
@@ -80,13 +73,6 @@ class Tags {
             const { rows } = await databaseClient.execute("DELETE FROM tags WHERE user_id = $1 AND id = $2 RETURNING *", [userId, tagId]);
            
             if (rows.length === 0) {
-                
-                console.log("Tag not found for user ID: " + userId);
-                console.log("--------------------------------------------------")
-                console.log("Tag ID: " + tagId);
-                console.log("User ID: " + userId);
-                console.log(rows);
-                console.log("--------------------------------------------------")
                 throw new Error("Tag not found");
             }
 
@@ -107,13 +93,6 @@ class Tags {
                 );
 
                 if (result.rowCount === 0) {
-                    
-                console.log("Tag not found for user ID: " + userId);
-                console.log("--------------------------------------------------")
-                console.log("Tag ID: " + tagId);
-                console.log("User ID: " + userId);
-                console.log(result);
-                console.log("--------------------------------------------------")
                     throw new Error("Tag not found or no changes made");
                 }
             });
@@ -138,7 +117,6 @@ class Tags {
                 );
                 return { success: true };
             } catch (error) {
-                console.error('Error adding tag to URL:', error);
                 throw new Error('Failed to add tag to URL');
             }
         } else {
