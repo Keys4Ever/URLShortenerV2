@@ -39,12 +39,6 @@ export class tagController{
             const result = await tag.get({userId, tagId});
     
             if (!result) {
-                console.log("Tag not found for user ID: " + userId);
-                console.log("--------------------------------------------------")
-                console.log("Tag ID: " + tagId);
-                console.log("User ID: " + userId);
-                console.log(result);
-                console.log("--------------------------------------------------")
                 return res.status(404).json({ error: "Tag not found" });
             }
             return res.status(200).json(result);
