@@ -7,7 +7,7 @@ const ShortUrl = () => {
     useEffect(() => {
         const fetchUrl = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/url/${shortUrl}`, {
+                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/url/${shortUrl}`, {
                     method: 'GET',
                 });
                 const data = await response.json();
