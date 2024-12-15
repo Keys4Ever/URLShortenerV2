@@ -1,6 +1,6 @@
 import { useAuth } from '../../../../../context/authContext.jsx';
 import { LayoutDashboard, LogOut } from 'lucide-react';
-import Option from './option.jsx';
+import Option from './Option.jsx';
 
 const OptionList = ({toggleDropdown, isMobile}) => {
     return (
