@@ -9,20 +9,25 @@ const LookURLSection = () => {
     const [hasTried, setHasTried] = useState(false);
 
     const handleShortUrlChange = (event) => {
-        // Remove 'keys.lat/' if present
-        let inputUrl = event.target.value;
-        if (inputUrl.includes('keys.lat/')) {
-            inputUrl = inputUrl.replace('keys.lat/', '');
-        }
-        setShortUrl(inputUrl);
+        setShortUrl(event.target.value);
     };
 
     const handleGetUrl = async (event) => {
         event.preventDefault();
         
         if (shortUrl) {
+            // Limpiar la URL aquí antes de enviar la petición
+            let cleanedUrl = shortUrl.trim();
+            const prefixes = ['https://keys.lat/', 'http://keys.lat/', 'keys.lat/'];
+            
+            prefixes.forEach(prefix => {
+                if (cleanedUrl.startsWith(prefix)) {
+                    cleanedUrl = cleanedUrl.replace(prefix, '');
+                }
+            });
+
             try {
-                const response = await getOriginalUrl(shortUrl);
+                const response = await getOriginalUrl(cleanedUrl);
 
                 if (response?.originalUrl) {
                     setUrl(response.originalUrl);
@@ -51,14 +56,15 @@ const LookURLSection = () => {
                     <div className="flex items-center gap-4">
                         <input
                             type="text"
-                            placeholder="Paste your shortened URL here..."
+                            placeholder="Paste your shortened URL here (e.g., keys.lat/abc123)..."
                             className="flex-1 px-4 py-3 bg-transparent border-2 border-white focus:outline-none focus:border-gray-400 transition"
                             onChange={handleShortUrlChange}
                             value={shortUrl}
                         />
                         <button 
                             type="submit"
-                            className="flex items-center px-4 sm:px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition"
+                            disabled={!shortUrl.trim()}
+                            className="flex items-center px-4 sm:px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <span className="hidden sm:inline">Check URL</span>
                             <ArrowRight className="w-5 h-5 sm:ml-2" />
@@ -69,7 +75,7 @@ const LookURLSection = () => {
                 {url ? (
                     <ResultURL url={url} />
                 ) : hasTried && (
-                    <p className="text-white">No URL found. Please check the shortened URL.</p>
+                    <p className="text-white mt-4">No URL found. Please check the shortened URL.</p>
                 )}
             </div>
         </section>
