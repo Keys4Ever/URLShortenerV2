@@ -11,6 +11,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<Layout><MainPage/></Layout>} />
                 <Route path='/dashboard' element={<Layout><Dashboard /></Layout>} />
                 <Route path='/:shortUrl' element={<ShortUrl />} />
+                <Route path='/auth/login' element={window.location.href = "https://keys.lat"} />
             </Routes>
         </Suspense>
     );
