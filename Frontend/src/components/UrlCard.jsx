@@ -64,7 +64,7 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
         <div className="flex flex-col sm:flex-row justify-between items-start mb-2 space-y-2 sm:space-y-0">
           <div className="w-full sm:w-auto">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <span className="font-bold truncate max-w-[200px]">{shortUrl || "URL no disponible"}</span>
+              <span className="font-bold max-w-[200px]">{shortUrl || "URL no disponible"}</span>
               <button
                 className="p-1 hover:bg-white hover:text-black transition rounded"
                 onClick={handleCopyUrl}
@@ -80,11 +80,11 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
                 {qrCopied ? <Check className="w-4 h-4" /> : <QrCode className="w-4 h-4" />}
               </button>
             </div>
-            <p className="text-gray-400 text-sm break-all truncate max-w-full">
+            <p className="text-gray-400 text-sm break-all max-w-full">
               {item.longUrl || "URL completa no disponible"}
             </p>
             {item.description && (
-              <p className="text-sm text-gray-400 mt-1 truncate max-w-full">{item.description}</p>
+              <p className="text-sm text-gray-400 mt-1 max-w-full">{item.description}</p>
             )}
           </div>
           <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 w-full sm:w-auto">
