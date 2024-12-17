@@ -15,10 +15,15 @@ const ShortUrl = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
+                console.log('response:', response);
+                
                 const data = await response.json();
 
                 if (data && data.original_url) {
+
                     window.location.href = data.original_url;
+                } else if (data && data.originalUrl){
+                    window.location.href = data.originalUrl;
                 } else {
                     console.error('La respuesta no contiene original_url.');
                 }
