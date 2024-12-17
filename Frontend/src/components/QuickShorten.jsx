@@ -24,7 +24,7 @@ const QuickShorten = () => {
         ? await createShortUrl(userId, url)
         : await quickShort(url);
       console.log(response);
-      if (!response.success) throw new Error(response.error || 'Error shortening URL');
+      if (!response.success && !auth.authenticated) throw new Error(response.error || 'Error shortening URL');
 
       const generatedShortUrl = `keys.lat/${ response.url }`;
       setShortUrl(generatedShortUrl);
