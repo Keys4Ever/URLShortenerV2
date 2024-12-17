@@ -23,9 +23,7 @@ const authStatusController = (req: Request, res: Response) => {
 
 // Logout user
 const logoutController = (_req: Request, res: Response) => {
-    res.oidc.logout({
-        returnTo: process.env.FRONTEND_URL,
-    });
+    res.oidc.logout();
 };
 
 // Redirect to login if not authenticated
