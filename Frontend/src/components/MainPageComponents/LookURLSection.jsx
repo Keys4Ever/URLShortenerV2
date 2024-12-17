@@ -28,7 +28,7 @@ const LookURLSection = () => {
 
             try {
                 const response = await getOriginalUrl(cleanedUrl);
-
+                console.log(response);
                 if (response?.originalUrl) {
                     setUrl(response.originalUrl);
                 } else {
