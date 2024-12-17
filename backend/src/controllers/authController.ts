@@ -30,9 +30,8 @@ const logoutController = (_req: Request, res: Response) => {
 
 // Redirect to login if not authenticated
 const loginController = (req: Request, res: Response) => {
-    const {whereToRedirect} = req.params;
     if (!req.oidc.isAuthenticated()) {
-        whereToRedirect ? res.oidc.login({returnTo: whereToRedirect}) : res.oidc.login();
+        res.oidc.login();
     } else {
         res.redirect(String(process.env.FRONTEND_URL));
     }
