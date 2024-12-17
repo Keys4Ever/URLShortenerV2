@@ -16,14 +16,14 @@ const ShortUrl = () => {
                 }
 
                 console.log('response:', response);
-                
+
                 const data = await response.json();
 
                 if (data && data.original_url) {
 
                     window.location.href = data.original_url;
-                } else if (data && data.originalUrl){
-                    window.location.href = data.originalUrl;
+                } else if (data && !data.original_url) {
+                    window.location.href = data;
                 } else {
                     console.error('La respuesta no contiene original_url.');
                 }
