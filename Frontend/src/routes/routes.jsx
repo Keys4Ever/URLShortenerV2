@@ -12,7 +12,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<Layout><MainPage/></Layout>} />
                 <Route path='/dashboard' element={<Layout><Dashboard /></Layout>} />
                 <Route path='/:shortUrl' element={<ShortUrl />} />
-                <Route path='/auth/login' element={<Navigate to="https://keys.lat" replace />} />
+                <Route path='/auth/login' element={<Navigate to="/" replace />} />
             </Routes>
         </Suspense>
     );
