@@ -53,18 +53,18 @@ const LookURLSection = () => {
                 </h2>
 
                 <form className="space-y-6" onSubmit={handleGetUrl}>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                         <input
                             type="text"
                             placeholder="Paste your shortened URL here (e.g., keys.lat/abc123)..."
-                            className="flex-1 px-4 py-3 bg-transparent border-2 border-white focus:outline-none focus:border-gray-400 transition"
+                            className="flex-1 px-4 py-3 bg-transparent border-2 border-white focus:outline-none focus:border-gray-400 transition w-full"
                             onChange={handleShortUrlChange}
                             value={shortUrl}
                         />
                         <button 
                             type="submit"
                             disabled={!shortUrl.trim()}
-                            className="flex items-center px-4 sm:px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center justify-center px-4 sm:px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
                         >
                             <span className="hidden sm:inline">Check URL</span>
                             <ArrowRight className="w-5 h-5 sm:ml-2" />

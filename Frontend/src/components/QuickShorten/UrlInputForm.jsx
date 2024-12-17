@@ -13,11 +13,11 @@ const UrlInputForm = ({ isLoading, onShorten, error }) => {
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
         <input
           type="url"
           placeholder="Paste your long URL here..."
-          className="flex-1 px-4 py-3 bg-transparent border-2 border-white focus:outline-none focus:border-gray-400 transition"
+          className="flex-1 px-4 py-3 bg-transparent border-2 border-white focus:outline-none focus:border-gray-400 transition w-full"
           onChange={handleUrlChange}
           value={url}
           disabled={isLoading}
@@ -25,7 +25,7 @@ const UrlInputForm = ({ isLoading, onShorten, error }) => {
         />
         <button
           type="submit"
-          className="flex items-center px-4 sm:px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition"
+          className="flex items-center justify-center w-full sm:w-auto px-4 sm:px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition"
           disabled={isLoading}
         >
           <span className="hidden sm:inline">
