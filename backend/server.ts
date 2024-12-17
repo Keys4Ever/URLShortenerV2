@@ -32,6 +32,10 @@ app.get('/callback', (_req, res) => {
   res.redirect(String(process.env.FRONTEND_URL));
 });
 
+app.post('/callback', (_req, res) => {
+    res.redirect(String(process.env.FRONTEND_URL));
+});
+
 
 app.use("/api/quick", quickRoutes);
 app.use('/api/tags',  tagsRoutes);
