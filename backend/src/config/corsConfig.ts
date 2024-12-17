@@ -4,8 +4,9 @@ dotenv.config({ path: '../.env' });
 
 const allowedOrigins = [
   process.env.FRONTEND_URL || '',
-  'http://keys.lat',
-  'http://www.keys.lat',
+  'https://keys.lat',
+  'https://www.keys.lat',
+  'https://dev-q4njgcvqaebgc4ao.us.auth0.com'
 ];
 
 // Tipo para la función de configuración de CORS
