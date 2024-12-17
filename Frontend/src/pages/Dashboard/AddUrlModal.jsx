@@ -18,7 +18,7 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
     
     // Validar y corregir el formato de la URL antes de usarla
     if (!finalLongUrl.startsWith('https://') && !finalLongUrl.startsWith('http://')) {
-      setAlerta('No detectamos que su URL empiece con https o http, por defecto se añadirá https. Puede cambiarlo en edición.');
+      setAlerta('We detected that your url doesn\'t start with http:// nor https://, we will add https:// for you. If it should not be https:// edit it.');
       finalLongUrl = 'https://' + finalLongUrl;
     }
   

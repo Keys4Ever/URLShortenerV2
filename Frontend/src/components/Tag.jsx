@@ -8,7 +8,7 @@ const Tag = ({ selectedTags, setSelectedTags, tag, setTags, userId, handleEditTa
             setTags(prevTags => prevTags.filter(t => t.id !== id));
         } catch (error) {
             console.error("Error al eliminar la etiqueta:", error);
-            alert("No se pudo eliminar la etiqueta. Por favor, intenta de nuevo.");
+            alert("We can't delete the tag. Please try again later.\n If the problem persists, contact the administrator.");
         }
     };
 

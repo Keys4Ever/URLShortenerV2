@@ -24,7 +24,7 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
       const blob = await (await fetch(qrCodeDataUrl)).blob();
       const clipboardItem = new ClipboardItem({ 'image/png': blob });
       await navigator.clipboard.write([clipboardItem]);
-      alert('QR copiado al portapapeles');
+      alert('QR Copied to clipboard');
       setTimeout(() => setQrCopied(false), 2000);
     } catch (error) {
       console.error('Error al copiar el QR:', error);
@@ -43,7 +43,7 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
         deleteUrlLocally(item.id);
       } catch (error) {
         console.error('Error al eliminar la URL:', error);
-        alert('Error al eliminar la URL');
+        alert('Error deleting URL. Try again later. \nIf the problem persists, contact the administrator.');
       }
     }
   };
@@ -90,9 +90,9 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
           <div className="flex items-center gap-4">
             <div className="text-right">
               <p className="font-bold">
-                {item.clicks !== undefined ? `${item.clicks} clicks` : "Clicks no disponible"}
+                {item.clicks !== undefined ? `${item.clicks} clicks` : "Clicks not available, please refresh the page"}
               </p>
-              <p className="text-sm text-gray-400">{item.date || "Fecha no disponible"}</p>
+              <p className="text-sm text-gray-400">{item.date || "Date not available, please refresh the page"}</p>
             </div>
             <div className="flex items-center gap-2">
               <button 

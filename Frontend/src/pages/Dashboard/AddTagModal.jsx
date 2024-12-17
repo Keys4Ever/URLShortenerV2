@@ -32,13 +32,12 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
                     name: tagName,
                     description: tagDescription
                 };
-                // Aquí se llama a la función para actualizar el estado de tags
                 setTags((prevTags) =>
                     prevTags.map((tag) => (tag.id === tagId ? updatedTag : tag))
                 );
-                alert("Tag actualizado con éxito");
+                alert("Tag updated successfully :D");
             } else {
-                alert("Error al actualizar el tag");
+                alert("Error editing tag, please try again. \n If the problem persists, contact the admin.");
             }
         } catch (error) {
             console.error("Error al editar:", error);
@@ -56,11 +55,11 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
         event.preventDefault();
         setShowAddForm(false);
         if(tagName.length < 1){
-            alert("El nombre del tag no puede estar vacío");
+            alert("Tag name cannot be empty");
             return;
         }
         if(tagName.length > 20){
-            alert("El nombre del tag no puede tener más de 20 caracteres");
+            alert("Tag name cannot be longer than 20 characters");
             return;
         }
         try {
@@ -73,9 +72,9 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
 
             if (response.success) {
                 addTag(newTag);
-                alert("Tag añadida :D");
+                alert("Tag added successfully :D");
             } else {
-                alert("Error al añadir el tag");
+                alert("Error adding tag, please try again. \n If the problem persists, contact the admin.");
             }
         } catch (error) {
             console.error("Error al añadir el tag:", error);
