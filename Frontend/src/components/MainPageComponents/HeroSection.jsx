@@ -22,7 +22,7 @@ const HeroSection = () => {
                     <InvertedABtn
                         label="Get Started"
                         place="right"
-                        link={auth.authenticated ? "/dashboard" : `${import.meta.env.VITE_BACKEND_URL}login`}
+                        link={auth.authenticated ? "/dashboard" : `${import.meta.env.VITE_BACKEND_URL}auth/login`}
                         external={true}
                         icon={<ExternalLink />}
                     />
