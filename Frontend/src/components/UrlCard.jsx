@@ -64,7 +64,7 @@ const UrlCard = ({ item, userId, updateUrlsLocally, deleteUrlLocally, tags }) =>
         <div className="flex flex-col sm:flex-row justify-between items-start mb-2 space-y-2 sm:space-y-0">
           <div className="w-full sm:w-auto">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <span className="font-bold max-w-[200px]">{shortUrl || "URL no disponible"}</span>
+              <span className="font-mono">{shortUrl || "URL no disponible"}</span>
               <button
                 className="p-1 hover:bg-white hover:text-black transition rounded"
                 onClick={handleCopyUrl}

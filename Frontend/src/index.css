@@ -5,6 +5,6 @@
 
 @Layer base {
     body{
-        font-family: 'Courier New', Courier, monospace;
+        font-family: monospace, monospace;
     }
 }
