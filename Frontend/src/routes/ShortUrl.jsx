@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { redirect, useParams } from 'react-router-dom';
 
 const ShortUrl = () => {
     const { shortUrl } = useParams();
@@ -25,10 +25,13 @@ const ShortUrl = () => {
                 } else if (data && !data.original_url) {
                     window.location.href = data;
                 } else {
+                    
+                    redirect('/404');
                     console.error('La respuesta no contiene original_url.');
                 }
 
             } catch (error) {
+                window.location.href='/404';
                 console.error('Error fetching the URL:', error);
             }
         };

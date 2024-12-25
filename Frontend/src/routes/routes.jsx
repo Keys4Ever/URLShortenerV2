@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import MainPage from '../pages/MainPage';
 import Dashboard from '../pages/Dashboard';
 import ShortUrl from './ShortUrl';
+import { PageNotFound } from '../pages/404/404';
 const AppRoutes = () => {
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -13,6 +14,7 @@ const AppRoutes = () => {
                 <Route path='/dashboard' element={<Layout><Dashboard /></Layout>} />
                 <Route path='/:shortUrl' element={<ShortUrl />} />
                 <Route path='/auth/login' element={<Navigate to="/" replace />} />
+                <Route path='/404' element={<Layout> <PageNotFound/> </Layout>}/>
             </Routes>
         </Suspense>
     );
