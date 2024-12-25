@@ -39,7 +39,7 @@ export const getTag = async (userId, tagId) => {
 // Obtener todos los tags de un usuario
 export const getAllTags = async (userId) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/?userId=${userId}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/${userId}`);
         
         const data = await response.json();
         return data;
