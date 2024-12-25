@@ -26,7 +26,12 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
     }, [selectedTags, originalUrls, setUrlItems]);
 
     const addTag = (newTag) => {
-        setTags((prevTags) => [...prevTags, newTag]);
+        if(tags){
+            console.log(tags)
+            setTags((prevTags) => [...prevTags, newTag]);
+        }else{
+            setTags([newTag]);
+        }
     };
 
     const handleEditTag = (tagId) => {
@@ -59,7 +64,7 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
                         <SkeletonTag bigTag />
                         <SkeletonTag bigTag />
                     </>
-                ) : tags.error ? (
+                ) : tags.error || tags.length == '0' ? (
                     <p className="text-white">No tags found</p>
                 ) : (
                     tags.map((tag) => (

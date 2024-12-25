@@ -60,7 +60,7 @@ export default function Dashboard() {
         setIsLoadingUrls(true);
 
         const fetchedTags = await getAllTags(userId);
-        setTags(fetchedTags ? fetchedTags : []);
+        setTags(!fetchedTags.error ? fetchedTags : []);
         
         const urls = await getUserUrls(userId);
         setUrlItems(urls);

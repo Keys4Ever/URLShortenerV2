@@ -184,7 +184,7 @@ const AddUrlModal = ({ tags, setShowUrlForm, userId, edit = false, item = null, 
             <div className="flex flex-wrap gap-2 p-2 border-2 border-white">
               {tagLoading ? 
                 <SkeletonTag /> : 
-                tags.error ?  <p className="text-white">No tags found</p> :  
+                tags.error || tags.length == "0" ?  <p className="text-white">No tags found</p> :  
                     tags.map((tag) => (
                       <label key={tag.id} className="flex items-center gap-2 p-2 border border-white">
                         <input
