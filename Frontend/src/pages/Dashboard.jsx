@@ -53,6 +53,9 @@ export default function Dashboard() {
       try {
         setIsLoadingTags(true);
         const fetchedTags = await getAllTags(userId);
+        console.log('fetched tags: ', fetchedTags);
+        console.log('fetched tags: ', fetchedTags.tags);
+        console.log('fetched length', fetchedTags.length);
         setTags(fetchedTags.tags.length ? fetchedTags.tags : []);
       } catch (error) {
         console.error('Error al cargar datos iniciales:', error);

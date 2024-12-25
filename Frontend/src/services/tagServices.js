@@ -40,10 +40,8 @@ export const getTag = async (userId, tagId) => {
 export const getAllTags = async (userId) => {
     try {
 
-        console.log('Peticion a: ', `${import.meta.env.VITE_BACKEND_URL}api/tags/${userId}`);
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/${userId}`);
         
-        console.log('Respuesta: ', response);
         const data = await response.json();
         console.log('Data: ', data);
         return data;
