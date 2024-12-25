@@ -57,7 +57,7 @@ export class tagController{
     
         try {
             const tags = await tag.getAll(userId);
-    
+            console.log("At tagsController.ts, tags: ",tags)
             if (tags.length === 0) {
                 return res.status(404).json({ error: "No tags found" });
             }

@@ -58,7 +58,7 @@ class Tags {
             if (rows.length === 0) {
                 throw new Error("No tags found");
             }
-
+            console.log("At Tags.ts, rows: ",rows)
             return rows;
 
         } catch (error) {
