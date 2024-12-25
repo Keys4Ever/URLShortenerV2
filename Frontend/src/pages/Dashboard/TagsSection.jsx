@@ -14,7 +14,7 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
     const originalUrls = useUserUrls(userId, setUrlItems);
 
     // Filtrar URLs por etiquetas seleccionadas
-    useEffect(() => {
+    useEffect(() => {                    
         if (selectedTags.length === 0) {
             setUrlItems(originalUrls);
         } else {
@@ -37,6 +37,7 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
 
     return (
         <div className="border-2 border-white p-4 mb-6">
+            {console.log("TAGSSS",tags)}
             {showAddForm && (
                 <AddTagModal
                     userId={userId}
@@ -58,12 +59,12 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
                         <SkeletonTag bigTag />
                         <SkeletonTag bigTag />
                     </>
-                ) : tags.length === 0 ? (
+                ) : tags.error ? (
                     <p className="text-white">No tags found</p>
                 ) : (
                     tags.map((tag) => (
                         <div 
-                            key={tag.id} 
+                            key={tag.id}
                             className="flex-shrink-0" // Prevents tags from shrinking
                         >
                             <Tag
