@@ -41,10 +41,6 @@ export const getAllTags = async (userId) => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/tags/?userId=${userId}`);
         
-        if (!response.ok) {
-            throw new Error('Error al obtener los tags');
-        }
-
         const data = await response.json();
         return data;
     } catch (error) {
@@ -61,10 +57,6 @@ export const updateTag = async (tagId, newName, newDescription, userId) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: newName, description: newDescription, userId: userId })
         });
-
-        if (!response.ok) {
-            throw new Error('Error al actualizar el tag');
-        }
 
         const data = await response.json();
         return data;
@@ -83,10 +75,6 @@ export const deleteTag = async (userId, tagId) => {
                 'Content-Type': 'application/json',
             }
         });
-
-        if (!response.ok) {
-            throw new Error('Error al eliminar el tag');
-        }
 
         return { success: true };
     } catch (error) {
