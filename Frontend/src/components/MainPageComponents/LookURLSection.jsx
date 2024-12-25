@@ -31,6 +31,8 @@ const LookURLSection = () => {
                 console.log(response);
                 if (response?.original_url) {
                     setUrl(response.original_url);
+                } else if (response){
+                    setUrl(response);
                 } else {
                     setUrl(null);
                 }
