@@ -12,7 +12,7 @@ export const quickShort = async (url) => {
 }
 
 export const addSecretToUser = async (user, secret) => {
-  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/secret`, {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/quick/connect`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
