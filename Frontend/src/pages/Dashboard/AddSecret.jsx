@@ -28,7 +28,6 @@ const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
             }
 
             const newUrl = {
-                id: response.newUrl.urlId,
                 shortUrl: response.newUrl.shortUrl,
                 longUrl: response.newUrl.longUrl,
                 description: '',
