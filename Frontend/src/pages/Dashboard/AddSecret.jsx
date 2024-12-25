@@ -27,13 +27,16 @@ const AddSecret = ({ userId, updateUrlsLocally, setShowAddSecret }) => {
                 throw new Error(response.error);
             }
 
+            console.log(response);
+
             const newUrl = {
-                shortUrl: response.newUrl.shortUrl,
-                longUrl: response.newUrl.longUrl,
+                id: response.result.newUrl.urlId,
+                shortUrl: response.result.newUrl.shortUrl,
+                longUrl: response.result.newUrl.longUrl,
                 description: '',
                 tags:[],
-                clicks: response.newUrl.clicks,
-                date: response.newUrl.date
+                clicks: response.result.newUrl.clicks,
+                date: response.result.newUrl.date
             }
             updateUrlsLocally(newUrl);
 
