@@ -5,24 +5,27 @@ import { createTag, getTag, updateTag } from "../../services/tagServices";
 const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) => {
     const [tagName, setTagName] = useState('');
     const [tagDescription, setTagDescription] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const populateForm = async (tagId) => {
+        setIsLoading(true);
         try {
-            const response = await getTag(userId, tagId); // Corrección de "userId"
+            const response = await getTag(userId, tagId);
             if (response) {
                 console.log(response);
-                setTagName(response.tag.name);
-                setTagDescription(response.tag.description);
+                setTagName(response.name);
+                setTagDescription(response.description);
             }
         } catch (e) {
             console.error("Error al obtener el tag:", e);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const editTag = async (event) => {
         event.preventDefault();
-        setShowAddForm(false);
-    
+        setIsLoading(true);
         try {
             const response = await updateTag(tagId, tagName, tagDescription, userId);
     
@@ -36,14 +39,16 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
                     prevTags.map((tag) => (tag.id === tagId ? updatedTag : tag))
                 );
                 alert("Tag updated successfully :D");
+                setShowAddForm(false);
             } else {
                 alert("Error editing tag, please try again. \n If the problem persists, contact the admin.");
             }
         } catch (error) {
             console.error("Error al editar:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
-    
 
     useEffect(() => {
         if (edit && tagId) {
@@ -53,7 +58,6 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
 
     const handleAddForm = async (event) => {
         event.preventDefault();
-        setShowAddForm(false);
         if(tagName.length < 1){
             alert("Tag name cannot be empty");
             return;
@@ -62,6 +66,8 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
             alert("Tag name cannot be longer than 20 characters");
             return;
         }
+        
+        setIsLoading(true);
         try {
             const response = await createTag(tagName, tagDescription, userId);
             const newTag = {
@@ -73,11 +79,14 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
             if (response.success) {
                 addTag(newTag);
                 alert("Tag added successfully :D");
+                setShowAddForm(false);
             } else {
                 alert("Error adding tag, please try again. \n If the problem persists, contact the admin.");
             }
         } catch (error) {
             console.error("Error al añadir el tag:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -86,7 +95,11 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
             <div className="bg-black border-2 border-white p-6 max-w-md w-full mx-4">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold">{edit ? "Edit Tag" : "Add New Tag"}</h3>
-                    <button onClick={() => setShowAddForm(false)} className="p-2 hover:bg-white hover:text-black transition">
+                    <button 
+                        onClick={() => setShowAddForm(false)} 
+                        className="p-2 hover:bg-white hover:text-black transition"
+                        disabled={isLoading}
+                    >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
@@ -97,33 +110,45 @@ const AddTagModal = ({ userId, setShowAddForm, addTag, edit, tagId, setTags }) =
                             type="text"
                             placeholder="Enter tag name"
                             required
+                            disabled={isLoading}
                             value={tagName}
                             onChange={(e) => setTagName(e.target.value)}
-                            className="w-full p-2 bg-transparent border-2 border-white focus:outline-none"
+                            className={`w-full p-2 bg-transparent border-2 border-white focus:outline-none ${
+                                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
                         />
                     </div>
                     <div>
                         <label className="block mb-2">Description</label>
                         <textarea
-                            className="w-full p-2 bg-transparent border-2 border-white focus:outline-none min-h-[100px]"
+                            className={`w-full p-2 bg-transparent border-2 border-white focus:outline-none min-h-[100px] ${
+                                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
                             placeholder="Add a description for this tag..."
                             value={tagDescription}
                             onChange={(e) => setTagDescription(e.target.value)}
+                            disabled={isLoading}
                         />
                     </div>
                     <div className="flex justify-end gap-4 pt-4">
                         <button
                             type="button"
                             onClick={() => setShowAddForm(false)}
-                            className="px-4 py-2 border border-white hover:bg-white hover:text-black transition"
+                            className={`px-4 py-2 border border-white hover:bg-white hover:text-black transition ${
+                                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            disabled={isLoading}
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-white text-black hover:bg-gray-200 transition"
+                            className={`px-4 py-2 bg-white text-black hover:bg-gray-200 transition ${
+                                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
+                            disabled={isLoading}
                         >
-                            {edit ? "Save Changes" : "Add Tag"}
+                            {isLoading ? 'Loading...' : (edit ? "Save Changes" : "Add Tag")}
                         </button>
                     </div>
                 </form>

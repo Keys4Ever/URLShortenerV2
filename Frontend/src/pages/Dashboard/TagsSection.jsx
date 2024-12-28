@@ -34,6 +34,11 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
         }
     };
 
+    const HandleAdd = () => {
+        setShowAddForm(true);
+        setEdit(false);
+    }
+
     const handleEditTag = (tagId) => {
         setEdit(true);
         setTagIdToEdit(tagId);
@@ -85,7 +90,7 @@ const TagsSection = ({ tags, isLoading, setTags, userId, setUrlItems }) => {
                 )}
             </div>
             <button
-                onClick={() => setShowAddForm(true)}
+                onClick={() => HandleAdd()}
                 className="flex items-center gap-2 px-4 py-2 border border-white hover:bg-white hover:text-black transition"
             >
                 <Plus className="w-4 h-4" />
