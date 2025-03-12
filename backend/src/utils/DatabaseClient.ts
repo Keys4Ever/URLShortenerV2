@@ -1,11 +1,17 @@
 import pg from 'pg';
 import { poolConfig } from '../config/poolConfig.js';
-
+import pkg from 'pg';
+const { Pool } = pkg;
 class DatabaseClient{
     public pool: pg.Pool;
 
     constructor() {
-        this.pool = new pg.Pool(poolConfig);
+        this.pool = new Pool({
+            connectionString: poolConfig.connectionString,
+            ssl: {
+                rejectUnauthorized: false,
+            },
+        });
     }
 
     async execute(query: string, params?: any[]): Promise<pg.QueryResult> {
