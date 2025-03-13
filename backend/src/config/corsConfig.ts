@@ -6,7 +6,8 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || '',
   'https://keys.lat',
   'https://www.keys.lat',
-  'https://dev-q4njgcvqaebgc4ao.us.auth0.com'
+  'https://dev-q4njgcvqaebgc4ao.us.auth0.com',
+  'http://3.144.116.111/',
 ];
 
 // Tipo para la función de configuración de CORS

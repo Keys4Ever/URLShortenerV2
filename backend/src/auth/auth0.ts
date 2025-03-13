@@ -22,6 +22,11 @@ const config = {
     baseURL: AUTH0_BASEURL,
     clientID: AUTH0_CLIENTID,
     issuerBaseURL: AUTH0_ISSUERBASE,
+    routes:{
+	            callback: '/api/callback',
+		            login: '/api/login',
+			            logout: '/api/logout',
+    }
 };
 
 const authMiddleware = auth(config);
@@ -52,3 +57,4 @@ const checkUserInDatabase = async (req: Request, _res: Response, next: NextFunct
 };
 
 export { authMiddleware, checkUserInDatabase };
+

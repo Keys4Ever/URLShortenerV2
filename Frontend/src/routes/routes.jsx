@@ -14,7 +14,8 @@ const AppRoutes = () => {
                 <Route path='/dashboard' element={<Layout><Dashboard /></Layout>} />
                 <Route path='/:shortUrl' element={<ShortUrl />} />
                 <Route path='/auth/login' element={<Navigate to="/" replace />} />
-                <Route path='/404' element={<Layout> <PageNotFound/> </Layout>}/>
+               	<Route path='/callback' element={ <Navigate to="/" replace /> } />
+	    	<Route path='/404' element={<Layout> <PageNotFound/> </Layout>}/>
             </Routes>
         </Suspense>
     );

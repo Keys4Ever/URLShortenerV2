@@ -28,9 +28,12 @@ const logoutController = (_req: Request, res: Response) => {
 
 // Redirect to login if not authenticated
 const loginController = (req: Request, res: Response) => {
+    console.log("Dios sabrá pq pasa esto")
     if (!req.oidc.isAuthenticated()) {
-        res.oidc.login();
+        console.log("No estaba auth");
+	    res.oidc.login();
     } else {
+	console.log("xd")
         res.redirect(String(process.env.FRONTEND_URL));
     }
 };
